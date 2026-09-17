@@ -1,0 +1,5 @@
+'use client';
+import { PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart, ResponsiveContainer, Tooltip } from 'recharts';
+import type { AcademicYear } from '../../types/student.types';
+import { mapSubjects } from '../../mappers/studentChart.mapper';
+export default function GradesRadarChart({ year }: { year: AcademicYear }) { return <div className="chart-canvas radar-canvas" dir="ltr" role="img" aria-label="توزيع أداء المواد"><ResponsiveContainer width="100%" height="100%"><RadarChart data={mapSubjects(year)} outerRadius="65%"><PolarGrid stroke="#267372" /><PolarAngleAxis dataKey="name" tick={{ fill: '#c4ddda', fontSize: 9 }} tickFormatter={name => name.replace('اللغة ', '').replace('الدراسات الاجتماعية', 'الدراسات')} /><PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} /><Radar dataKey="score" stroke="#58dfca" fill="#3b928c" fillOpacity={0.5} /><Tooltip contentStyle={{ background: '#07383b', border: '1px solid #267372', borderRadius: 10 }} /></RadarChart></ResponsiveContainer></div>; }

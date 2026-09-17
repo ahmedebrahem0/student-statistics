@@ -1,0 +1,1 @@
+export default function Loader() { return <div className="loading-state" role="status"><span className="loading-ring" /><h2>بنجهز رحلتك الدراسية</h2><p>جاري تحميل بيانات الطالب…</p><div className="skeleton-row"><span /><span /><span /></div><div className="skeleton-chart" /></div>; }

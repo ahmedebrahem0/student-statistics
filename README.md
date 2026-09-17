@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+﻿# BIG EDUCATION — Student Statistics
 
-## Getting Started
+تطبيق عربي RTL لمتابعة أداء الطالب، مصمم للموبايل والتابلت وفق المرجع public/image/Mobile&Tablit.png.
 
-First, run the development server:
+## التشغيل
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+افتح http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## التحقق
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npx tsc --noEmit
+npm run lint
+npm run build
+```
 
-## Learn More
+## البيانات
 
-To learn more about Next.js, take a look at the following resources:
+تُجلب بيانات الطالب باستخدام RTK Query. رابط الخلفية الوارد في البريف كان يعيد HTTP 404 أثناء التنفيذ. عند تعذر الاتصال تظهر حالة خطأ وإعادة محاولة، ويمكن اختيار عرض بيانات تجريبية بشكل صريح لمراجعة الواجهة.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+إضافة السنوات وتعديلها مخصصان للعرض التجريبي ويُحفظان محليًا؛ لا توجد endpoints لحفظ التعديلات في الخلفية ضمن البريف.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## التنظيم
 
-## Deploy on Vercel
+- src/app: صفحات التطبيق وproviders والأنماط.
+- src/features/student: API والأنواع والحسابات والرسوم ونماذج السنوات.
+- src/store: Redux وRTK Query.
+- src/shared: العناصر والمرافق المشتركة.
+- IMPLEMENTATION_PLAN.md: خطة التنفيذ ومعايير المراجعة.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+الألوان الأساسية: #3b928c و#267372. الشعار الشفاف الرسمي لم يُرفق؛ تُستخدم علامة كتابية مؤقتة حتى إضافته.
