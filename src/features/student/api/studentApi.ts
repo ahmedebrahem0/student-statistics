@@ -4,22 +4,22 @@ import { manageGradesResponseSchema, predictionResponseSchema, studentResponseSc
 export const studentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getStudent: builder.query<Student, void>({
-      query: () => 'students/1/performance',
+      query: () => 'student/performance',
       transformResponse: (response: unknown) => studentResponseSchema.parse(response), providesTags: ['Student']
     }),
     getSubjects: builder.query<SubjectOption[], void>
       ({
-        query: () => 'students/subjects',
+        query: () => 'student/subjects',
         transformResponse: (response: unknown) => subjectOptionsSchema.parse(response)
       }),
     manageGrades: builder.mutation<ManageGradesResponse, ManageGradesRequest>
       ({
         query: (body) => ({
-          url: 'students/grades/manage',
+          url: 'student/grades/manage',
           method: 'POST', body
         }), transformResponse: (response: unknown) => manageGradesResponseSchema.parse(response), invalidatesTags: ['Student']
       }),
-    getPrediction: builder.query<PerformancePrediction, { studentId: number; year: number }>({ query: ({ studentId, year }) => `students/predict/${studentId}/${year}`, transformResponse: (response: unknown) => predictionResponseSchema.parse(response) })
+    getPrediction: builder.query<PerformancePrediction, { studentId: number; year: number }>({ query: ({ studentId, year }) => `student/predict/${studentId}/${year}`, transformResponse: (response: unknown) => predictionResponseSchema.parse(response) })
   })
 });
 export const { useGetStudentQuery, useGetSubjectsQuery, useManageGradesMutation, useLazyGetPredictionQuery } = studentApi;
