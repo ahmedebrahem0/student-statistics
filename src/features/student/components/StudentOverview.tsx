@@ -63,7 +63,7 @@ export default function StudentOverview() {
           )
         ) : (
           <>
-            <StudentInfo student={student} />
+            <StudentInfo student={student} count={years.length} />
             <StatisticsSummary years={years} />
             {years.length > 0 && (
               <section className="chart-panel panel" id="progress">
@@ -239,7 +239,7 @@ export default function StudentOverview() {
                         <small dir="ltr">Your progress. Our priority.</small>
                       </section>
                     </div>
-                    <PredictionPanel studentId={student.id} />
+                    <PredictionPanel studentId={student.id} latestYearLabel={years.at(-1)?.year_label} />
                   </>
                 )}
               </>

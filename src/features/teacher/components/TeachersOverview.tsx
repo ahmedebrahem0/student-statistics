@@ -4,6 +4,8 @@ import {
   ArrowLeft,
   BookOpen,
   GraduationCap,
+  TrendingUp,
+  UserRound,
 } from "lucide-react";
 import { useGetTeachersQuery } from "../api/teacherApi";
 import TeacherNavigation from "./TeacherNavigation";
@@ -12,7 +14,7 @@ import Loader from "@/shared/components/common/Loader";
 import ErrorMessage from "@/shared/components/common/ErrorMessage";
 import EmptyState from "@/shared/components/common/EmptyState";
 import Footer from "@/shared/components/layout/Footer";
-import { ratingLabel } from "@/features/student/utils/student.utils";
+import { numberLabel, ratingLabel } from "@/features/student/utils/student.utils";
 export default function TeachersOverview() {
   const {
     data: teachers,
@@ -52,15 +54,22 @@ export default function TeachersOverview() {
           </section>
         ) : (
           <>
+            <section className="teacher-summary" aria-label="ملخص المعلمين">
+              <div className="panel"><UserRound /><span>إجمالي المعلمين</span><strong>{teachers.length}</strong></div>
+              <div className="panel"><BookOpen /><span>التخصصات</span><strong>{new Set(teachers.map((teacher) => teacher.subject)).size}</strong></div>
+              <div className="panel"><TrendingUp /><span>أفضل متوسط حالي</span><strong dir="ltr">{numberLabel(Math.max(...teachers.map((teacher) => teacher.yearly_performance.at(-1)?.avg_score ?? 0)))}</strong></div>
+            </section>
             <section className="teachers-list" aria-labelledby="teachers-title">
               <div className="teachers-heading">
                 <div>
                   <span className="eyebrow">المشهد الكامل</span>
                   <h2 id="teachers-title">المعلمون حسب الأداء السنوي</h2>
                 </div>
+                <span>{teachers.length} معلم</span>
               </div>
               {teachers.map((teacher) => {
                 const latest = teacher.yearly_performance.at(-1);
+                const average = teacher.yearly_performance.length ? teacher.yearly_performance.reduce((sum, year) => sum + year.avg_score, 0) / teacher.yearly_performance.length : 0;
                 return (
                   <article className="teacher-card panel" key={teacher.id}>
                     <div className="teacher-card-main">
@@ -80,6 +89,7 @@ export default function TeachersOverview() {
                       compact
                     />
                     <div className="teacher-metrics">
+                      <div><span>المتوسط العام</span><strong dir="ltr">{numberLabel(average)}</strong></div>
                       <div>
                         <span>أحدث تقييم</span>
                         <strong>

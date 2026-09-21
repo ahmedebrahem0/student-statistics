@@ -4,6 +4,7 @@ import {
   ArrowRight,
   BookOpen,
   GraduationCap,
+  TrendingUp,
   UsersRound,
 } from "lucide-react";
 import { useGetTeacherQuery } from "../api/teacherApi";
@@ -13,7 +14,7 @@ import Loader from "@/shared/components/common/Loader";
 import ErrorMessage from "@/shared/components/common/ErrorMessage";
 import EmptyState from "@/shared/components/common/EmptyState";
 import Footer from "@/shared/components/layout/Footer";
-import { numberLabel, ratingLabel } from "@/features/student/utils/student.utils";
+import { numberLabel, ratingFor, ratingLabel } from "@/features/student/utils/student.utils";
 export default function TeacherDetails({ teacherId }: { teacherId: number }) {
   const {
     data: teacher,
@@ -59,6 +60,7 @@ export default function TeacherDetails({ teacherId }: { teacherId: number }) {
                 <strong dir="ltr">
                   {numberLabel(teacher.overall_performance)}
                 </strong>
+                <small>{ratingLabel(ratingFor(teacher.overall_performance))}</small>
               </div>
               <div className="teacher-total">
                 <UsersRound />
@@ -75,6 +77,7 @@ export default function TeacherDetails({ teacherId }: { teacherId: number }) {
                   <span className="eyebrow">داخل الفصل</span>
                   <h2 id="student-performance-title">تطور أداء الطلاب</h2>
                 </div>
+                <span>{teacher.students.length} طالب</span>
               </div>
               {teacher.students.length === 0 ? (
                 <div className="panel teacher-state">
@@ -96,7 +99,9 @@ export default function TeacherDetails({ teacherId }: { teacherId: number }) {
                         </div>
                         <div>
                           <h3>{student.student_name}</h3>
+                          <p>{student.chart_data.length} سنوات دراسية</p>
                         </div>
+                        {student.chart_data.length > 1 && <span className="trend-pill"><TrendingUp size={13} />اتجاه سنوي</span>}
                       </div>
                       <TeacherTrendChart data={student.chart_data} />
                       {student.chart_data.length > 0 && (

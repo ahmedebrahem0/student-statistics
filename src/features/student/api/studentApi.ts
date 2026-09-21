@@ -1,6 +1,7 @@
 import { baseApi } from '@/store/baseApi';
 import type { ManageGradesRequest, ManageGradesResponse, PerformancePrediction, Student, SubjectOption } from '../types/student.types';
 import { manageGradesResponseSchema, predictionResponseSchema, studentPerformanceResponseSchema, studentResponseSchema, subjectOptionsSchema } from '../schema/student.schema';
+import { ratingFor } from '../utils/student.utils';
 export const studentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getStudent: builder.query<Student, void>({
@@ -16,6 +17,7 @@ export const studentApi = baseApi.injectEndpoints({
             year_id: year.year_id,
             year_label: year.year_label,
             gpa: year.gpa,
+            overall_rating: ratingFor(year.gpa),
             subjects: year.subjects.map(subject => ({
               name: subject.subject_name,
               score: String(subject.score),
