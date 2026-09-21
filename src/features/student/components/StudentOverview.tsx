@@ -23,7 +23,7 @@ import Loader from "@/shared/components/common/Loader";
 import ErrorMessage from "@/shared/components/common/ErrorMessage";
 import EmptyState from "@/shared/components/common/EmptyState";
 import { numberLabel, ratingLabel } from "../utils/student.utils";
-export default function StudentOverview() {
+export default function StudentOverview({ studentId }: { studentId?: number } = {}) {
   const {
     student,
     years,
@@ -32,7 +32,7 @@ export default function StudentOverview() {
     isLoading,
     isFetching,
     refetch,
-  } = useStudent();
+  } = useStudent(studentId);
   const [modal, setModal] = useState<"add" | "edit" | null>(null);
   const [saved, setSaved] = useState<string | null>(null);
   const add = () => {

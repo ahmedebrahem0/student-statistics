@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { useGetTeachersQuery } from "../api/teacherApi";
 import TeacherNavigation from "./TeacherNavigation";
-import TeacherTrendChart from "./TeacherTrendChart";
+import TeachersComparisonChart from "./TeachersComparisonChart";
 import Loader from "@/shared/components/common/Loader";
 import ErrorMessage from "@/shared/components/common/ErrorMessage";
 import EmptyState from "@/shared/components/common/EmptyState";
@@ -55,15 +55,24 @@ export default function TeachersOverview() {
         ) : (
           <>
             <section className="teacher-summary" aria-label="ملخص المعلمين">
-              <div className="panel"><UserRound /><span>إجمالي المعلمين</span><strong>{teachers.length}</strong></div>
-              <div className="panel"><BookOpen /><span>التخصصات</span><strong>{new Set(teachers.map((teacher) => teacher.subject)).size}</strong></div>
-              <div className="panel"><TrendingUp /><span>أفضل متوسط حالي</span><strong dir="ltr">{numberLabel(Math.max(...teachers.map((teacher) => teacher.yearly_performance.at(-1)?.avg_score ?? 0)))}</strong></div>
+              <div className="panel"><span>إجمالي المعلمين</span><div><strong>{teachers.length}</strong><UserRound /></div></div>
+              <div className="panel"><span>التخصصات</span><div><strong>{new Set(teachers.map((teacher) => teacher.subject)).size}</strong><BookOpen /></div></div>
+              <div className="panel"><span>أفضل متوسط</span><div><strong dir="ltr">{numberLabel(Math.max(...teachers.map((teacher) => teacher.yearly_performance.at(-1)?.avg_score ?? 0)))}</strong><TrendingUp /></div></div>
+            </section>
+            <section className="teachers-comparison panel" aria-labelledby="teachers-comparison-title">
+              <div className="teachers-heading">
+                <div>
+                  <span className="eyebrow">اتجاه موحد</span>
+                  <h2 id="teachers-comparison-title">مقارنة المعلمين المعدلات عبر السنوات</h2>
+                </div>
+              </div>
+              <TeachersComparisonChart teachers={teachers} />
             </section>
             <section className="teachers-list" aria-labelledby="teachers-title">
               <div className="teachers-heading">
                 <div>
                   <span className="eyebrow">المشهد الكامل</span>
-                  <h2 id="teachers-title">المعلمون حسب الأداء السنوي</h2>
+                  <h2 id="teachers-title ">المعلمون حسب الأداء السنوي</h2>
                 </div>
                 <span>{teachers.length} معلم</span>
               </div>
@@ -84,10 +93,6 @@ export default function TeachersOverview() {
                         </p>
                       </div>
                     </div>
-                    <TeacherTrendChart
-                      data={teacher.yearly_performance}
-                      compact
-                    />
                     <div className="teacher-metrics">
                       <div><span>المتوسط العام</span><strong dir="ltr">{numberLabel(average)}</strong></div>
                       <div>

@@ -62,7 +62,7 @@ export default function TeacherDetails({ teacherId }: { teacherId: number }) {
                 </strong>
                 <small>{ratingLabel(ratingFor(teacher.overall_performance))}</small>
               </div>
-              <div className="teacher-total">
+              <div className="teacher-total !p-1">
                 <UsersRound />
                 <span>إجمالي الطلاب</span>
                 <strong>{teacher.total_students}</strong>
@@ -89,9 +89,11 @@ export default function TeacherDetails({ teacherId }: { teacherId: number }) {
               ) : (
                 <div className="student-trends">
                   {teacher.students.map((student) => (
-                    <article
+                    <Link
                       className="student-trend panel"
+                      href={`/student/${student.student_id}`}
                       key={student.student_id}
+                      aria-label={`عرض تفاصيل ${student.student_name}`}
                     >
                       <div className="student-trend-head">
                         <div className="student-avatar">
@@ -106,7 +108,7 @@ export default function TeacherDetails({ teacherId }: { teacherId: number }) {
                       <TeacherTrendChart data={student.chart_data} />
                       {student.chart_data.length > 0 && (
                         <div className="student-years">
-                          {student.chart_data.map((point) => (
+                          {[...student.chart_data].reverse().map((point) => (
                             <div key={point.year}>
                               <span dir="ltr">{point.year}</span>
                               <strong dir="ltr">
@@ -117,7 +119,7 @@ export default function TeacherDetails({ teacherId }: { teacherId: number }) {
                           ))}
                         </div>
                       )}
-                    </article>
+                    </Link>
                   ))}
                 </div>
               )}
