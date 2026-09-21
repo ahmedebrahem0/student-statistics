@@ -1,0 +1,180 @@
+{
+  "info": {
+    "_postman_id": "465a98b5-221a-4687-8d63-525a8070cc91",
+    "name": "studentGrade",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58245252",
+    "_collection_link": "https://go.postman.co/collection/58245399-465a98b5-221a-4687-8d63-525a8070cc91?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Teacher",
+      "item": [
+        {
+          "name": "compare",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/students/teachers/compare",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "students",
+                "teachers",
+                "compare"
+              ]
+            },
+            "description": "## Compare All Teachers Over the Years\n\nReturns a comparison of all teachers and their yearly academic performance across all academic years.\n\n### Method\n\n`GET /teachers/compare`\n\n### Authentication\n\nNo authentication required.\n\n### Query Parameters\n\nNone.\n\n### Response\n\nReturns an array of teacher objects, each containing their yearly performance statistics.\n\n#### Teacher Object\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `id` | integer | Unique identifier of the teacher |\n| `name` | string | Full name of the teacher |\n| `is_general` | boolean | Whether the teacher is a general (non-specialized) teacher |\n| `subject` | string | The subject the teacher specializes in. Returns `\"عام\"` for general teachers |\n| `yearly_performance` | array | List of yearly performance records |\n\n#### Yearly Performance Object\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `year_id` | integer | Unique identifier of the academic year |\n| `year_label` | string | Human-readable academic year label (e.g. `\"2024-2025\"`) |\n| `avg_score` | float | Average score of the teacher's students for that year |\n| `rating` | string | Performance rating derived from avg_score. Possible values: `Excellent`, `Very Good`, `Good`, `Pass`, `Fail` |\n| `students_count` | integer | Number of distinct students evaluated in that year |\n\n### Notes\n\n- For **specialized teachers** (`is_general: false`), only grades for their specific subject are included in the calculation.\n    \n- For **general teachers** (`is_general: true`), all grades of their students are included regardless of subject.\n    \n\n### Example Response\n\n``` json\n[\n    {\n        \"id\": 1,\n        \"name\": \"علي إبراهيم\",\n        \"is_general\": false,\n        \"subject\": \"الرياضيات\",\n        \"yearly_performance\": [\n            {\n                \"year_id\": 1,\n                \"year_label\": \"2020-2021\",\n                \"avg_score\": 88,\n                \"rating\": \"Excellent\",\n                \"students_count\": 1\n            },\n            {\n                \"year_id\": 2,\n                \"year_label\": \"2021-2022\",\n                \"avg_score\": 84,\n                \"rating\": \"Very Good\",\n                \"students_count\": 1\n            },\n            {\n                \"year_id\": 3,\n                \"year_label\": \"2022-2023\",\n                \"avg_score\": 90,\n                \"rating\": \"Excellent\",\n                \"students_count\": 1\n            },\n            {\n                \"year_id\": 4,\n                \"year_label\": \"2023-2024\",\n                \"avg_score\": 93,\n                \"rating\": \"Excellent\",\n                \"students_count\": 1\n            },\n            {\n                \"year_id\": 5,\n                \"year_label\": \"2024-2025\",\n                \"avg_score\": 96,\n                \"rating\": \"Excellent\",\n                \"students_count\": 1\n            },\n            {\n                \"year_id\": 6,\n                \"year_label\": \"2025-2026\",\n                \"avg_score\": 70,\n                \"rating\": \"Good\",\n                \"students_count\": 1\n            },\n            {\n                \"year_id\": 7,\n                \"year_label\": \"2026-2027\",\n                \"avg_score\": 82,\n                \"rating\": \"Very Good\",\n                \"students_count\": 1\n            }\n        ]\n    },\n    {\n        \"id\": 2,\n        \"name\": \"سليمان محمود\",\n        \"is_general\": false,\n        \"subject\": \"العلوم\",\n        \"yearly_performance\": [\n            {\n                \"year_id\": 1,\n                \"year_label\": \"2020-2021\",\n                \"avg_score\": 92,\n                \"rating\": \"Excellent\",\n                \"students_count\": 1\n            },\n            {\n                \"year_id\": 2,\n                \"year_label\": \"2021-2022\",\n                \"avg_score\": 89,\n                \"rating\": \"Excellent\",\n                \"students_count\": 1\n            },\n            {\n                \"year_id\": 3,\n                \"year_label\": \"2022-2023\",\n                \"avg_score\": 91,\n                \"rating\": \"Excellent\",\n                \"students_count\": 1\n            },\n            {\n                \"year_id\": 4,\n                \"year_label\": \"2023-2024\",\n                \"avg_score\": 96,\n                \"rating\": \"Excellent\",\n                \"students_count\": 1\n            },\n            {\n                \"year_id\": 5,\n                \"year_label\": \"2024-2025\",\n                \"avg_score\": 97.98,\n                \"rating\": \"Excellent\",\n                \"students_count\": 1\n            },\n            {\n                \"year_id\": 6,\n                \"year_label\": \"2025-2026\",\n                \"avg_score\": 70,\n                \"rating\": \"Good\",\n                \"students_count\": 1\n            },\n            {\n                \"year_id\": 7,\n                \"year_label\": \"2026-2027\",\n                \"avg_score\": 70,\n                \"rating\": \"Good\",\n                \"students_count\": 1\n            }\n        ]\n    }\n]\n\n ```"
+          },
+          "response": []
+        },
+        {
+          "name": "detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/students/teachers/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "students",
+                "teachers",
+                "1"
+              ]
+            },
+            "description": "## Teacher Detail\n\nReturns detailed information about a specific teacher, including their overall performance and a chart-ready breakdown of each student's yearly GPA.\n\n### Method\n`GET /teachers/{teacher_id}`\n\n### Path Parameters\n\n| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n| `teacher_id` | integer | Yes | The unique ID of the teacher |\n\n### Authentication\nNo authentication required.\n\n### Query Parameters\nNone.\n\n### Response\n\n#### Teacher Object\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `id` | integer | Unique identifier of the teacher |\n| `name` | string | Full name of the teacher |\n| `is_general` | boolean | Whether the teacher is a general (non-specialized) teacher |\n| `subject` | string | The subject the teacher specializes in. Returns `\"عام\"` for general teachers |\n| `overall_performance` | float | Average score across all students and all years |\n| `total_students` | integer | Total number of students assigned to this teacher |\n| `students` | array | List of students with their chart data |\n\n#### Student Object\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `student_id` | integer | Unique identifier of the student |\n| `student_name` | string | Full name of the student |\n| `chart_data` | array | Yearly GPA data points, ready for chart rendering |\n\n#### Chart Data Object\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `year` | string | Academic year label (e.g. `\"2024-2025\"`) |\n| `gpa` | float | Average score for that academic year |\n| `rating` | string | Performance rating. Possible values: `Excellent`, `Very Good`, `Good`, `Pass`, `Fail` |\n\n### Notes\n- For **specialized teachers** (`is_general: false`), only grades for their specific subject are used when calculating `overall_performance` and `chart_data`.\n- For **general teachers** (`is_general: true`), all grades across all subjects are included.\n- Returns `404 Not Found` if no teacher exists with the given `teacher_id`.\n- `chart_data` is ordered by academic year and is suitable for direct use in frontend charts.\n\n### Example Response\n\n```json\n{\n  \"id\": 1,\n  \"name\": \"علي إبراهيم\",\n  \"is_general\": false,\n  \"subject\": \"الرياضيات\",\n  \"overall_performance\": 86.14,\n  \"total_students\": 1,\n  \"students\": [\n    {\n      \"student_id\": 1,\n      \"student_name\": \"أحمد محمود\",\n      \"chart_data\": [\n        { \"year\": \"2020-2021\", \"gpa\": 88.0, \"rating\": \"Excellent\" },\n        { \"year\": \"2021-2022\", \"gpa\": 84.0, \"rating\": \"Very Good\" },\n        { \"year\": \"2024-2025\", \"gpa\": 96.0, \"rating\": \"Excellent\" }\n      ]\n    }\n  ]\n}\n```"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "performance",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"variant_id\": 19\r\n}",
+          "options": {
+            "raw": {
+              "language": "text"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/students/students/1/performance",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "students",
+            "students",
+            "1",
+            "performance"
+          ]
+        },
+        "description": "## Student Performance\n\nReturns the full academic performance history of a specific student across all subjects and all academic years.\n\n### Method\n`GET /students/{student_id}/performance`\n\n### Path Parameters\n\n| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n| `student_id` | integer | Yes | The unique ID of the student |\n\n### Authentication\nNo authentication required.\n\n### Query Parameters\nNone.\n\n### Response\n\n#### Student Performance Object\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `student_id` | integer | Unique identifier of the student |\n| `student_name` | string | Full name of the student |\n| `history` | array | List of yearly performance records ordered by academic year |\n\n#### Yearly History Object\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `year_id` | integer | Unique identifier of the academic year |\n| `year_label` | string | Academic year label (e.g. `\"2024-2025\"`) |\n| `gpa` | float | Average score across all subjects for that year |\n| `subjects` | array | List of subject scores for that year |\n\n#### Subject Score Object\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `subject_id` | integer | Unique identifier of the subject |\n| `subject_name` | string | Name of the subject |\n| `score` | float | Score achieved in that subject for that year |\n| `rating` | string | Performance rating. Possible values: `Excellent`, `Very Good`, `Good`, `Pass`, `Fail` |\n\n### Notes\n- `history` is sorted by `year_label` in ascending order.\n- `gpa` is the arithmetic mean of all subject scores in that academic year, rounded to 2 decimal places.\n- Returns `404 Not Found` if no student exists with the given `student_id`.\n\n### Example Response\n\n```json\n{\n  \"student_id\": 1,\n  \"student_name\": \"أحمد محمود\",\n  \"history\": [\n    {\n      \"year_id\": 1,\n      \"year_label\": \"2020-2021\",\n      \"gpa\": 87.99,\n      \"subjects\": [\n        { \"subject_id\": 1, \"subject_name\": \"اللغة العربية\", \"score\": 90.0, \"rating\": \"Excellent\" },\n        { \"subject_id\": 2, \"subject_name\": \"اللغة الإنجليزية\", \"score\": 85.0, \"rating\": \"Excellent\" },\n        { \"subject_id\": 3, \"subject_name\": \"الرياضيات\", \"score\": 88.0, \"rating\": \"Excellent\" },\n        { \"subject_id\": 4, \"subject_name\": \"العلوم\", \"score\": 92.0, \"rating\": \"Excellent\" },\n        { \"subject_id\": 5, \"subject_name\": \"الدراسات الاجتماعية\", \"score\": 84.97, \"rating\": \"Very Good\" }\n      ]\n    }\n  ]\n}\n```"
+      },
+      "response": []
+    },
+    {
+      "name": "manage_grades",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"student_id\": 1,\r\n  //\"academic_year_id\": 3,\r\n  \"grades\": [\r\n    { \"subject_id\": 1, \"score\": 100.00 },\r\n    { \"subject_id\": 2, \"score\": 100.00 },\r\n    { \"subject_id\": 3, \"score\": 100.00 },\r\n    { \"subject_id\": 4, \"score\": 100.00 },\r\n    { \"subject_id\": 5, \"score\": 100.00 }\r\n  ]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/students/grades/manage",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "students",
+            "grades",
+            "manage"
+          ]
+        },
+        "description": "## 1\\. وصف عام\n\nيقوم هذا الـ endpoint بحفظ أو تحديث درجات طالب لسنة دراسية معينة (Upsert). إذا لم يتم تحديد `academic_year_id`، يتم تحديد السنة الدراسية التالية تلقائياً بناءً على آخر سنة مسجلة للطالب. بعد الحفظ، يُرجع بيانات أداء الطالب الكاملة عبر كل السنوات الدراسية.\n\n## 2\\. معلومات الطلب\n\n- Method: POST\n    \n- URL: `{{base_url}}/students/grades/manage`\n    \n- Content-Type: application/json\n    \n\n## 3\\. Request Body\n\n| الحقل | النوع | مطلوب | الوصف |\n| --- | --- | --- | --- |\n| student_id | integer | ✅ | معرّف الطالب |\n| academic_year_id | integer | ❌ | معرّف السنة الدراسية. إذا لم يُرسَل، يتم تحديد السنة التالية تلقائياً |\n| grades | array | ✅ | مصفوفة من درجات المواد (يجب أن تحتوي على مادة واحدة على الأقل) |\n| grades\\[\\].subject_id | integer | ✅ | معرّف المادة |\n| grades\\[\\].score | float | ✅ | الدرجة |\n\n### مثال على الطلب (بدون تحديد السنة):\n\n``` json\n{\n  \"student_id\": 1,\n  \"grades\": [\n    { \"subject_id\": 1, \"score\": 100.00 },\n    { \"subject_id\": 2, \"score\": 100.00 },\n    { \"subject_id\": 3, \"score\": 100.00 },\n    { \"subject_id\": 4, \"score\": 100.00 },\n    { \"subject_id\": 5, \"score\": 100.00 }\n  ]\n}\n\n ```\n\n### مثال على الطلب (مع تحديد السنة):\n\n``` json\n{\n  \"student_id\": 1,\n  \"academic_year_id\": 3,\n  \"grades\": [\n    { \"subject_id\": 1, \"score\": 90.00 }\n  ]\n}\n\n ```\n\n## 4\\. الاستجابة — 200 OK\n\nيُرجع رسالة نجاح وبيانات أداء الطالب الكاملة عبر كل السنوات.\n\n| الحقل | النوع | الوصف |\n| --- | --- | --- |\n| message | string | رسالة تأكيد تتضمن اسم السنة الدراسية |\n| data.id | integer | معرّف الطالب |\n| data.student_name | string | اسم الطالب |\n| data.academic_years | array | قائمة السنوات الدراسية مرتبة تصاعدياً |\n| data.academic_years\\[\\].year_id | integer | معرّف السنة |\n| data.academic_years\\[\\].year_label | string | تسمية السنة (مثال: 2025-2026) |\n| data.academic_years\\[\\].gpa | float | المعدل التراكمي للسنة |\n| data.academic_years\\[\\].overall_rating | string | التقدير العام (Excellent / Very Good ...) |\n| data.academic_years\\[\\].subjects | array | درجات المواد لهذه السنة |\n| data.academic_years\\[\\].subjects\\[\\].name | string | اسم المادة |\n| data.academic_years\\[\\].subjects\\[\\].score | string | الدرجة |\n| data.academic_years\\[\\].subjects\\[\\].rating | string | تقدير المادة |\n\n### مثال على الاستجابة:\n\n``` json\n{\n  \"message\": \"تم حفظ/تحديث الدرجات بنجاح للسنة الدراسية (2025-2026).\",\n  \"data\": {\n    \"id\": 1,\n    \"student_name\": \"أحمد محمود\",\n    \"academic_years\": [\n      {\n        \"year_id\": 6,\n        \"year_label\": \"2025-2026\",\n        \"gpa\": 100.0,\n        \"overall_rating\": \"Excellent\",\n        \"subjects\": [\n          { \"name\": \"اللغة العربية\", \"score\": \"100.00\", \"rating\": \"Excellent\" },\n          { \"name\": \"الرياضيات\", \"score\": \"100.00\", \"rating\": \"Excellent\" }\n        ]\n      }\n    ]\n  }\n}\n\n ```\n\n## 5\\. الاستجابة — 400 Bad Request\n\nيُرجع عند وجود خطأ في البيانات المُرسَلة، مثل:\n\n- عدم إرسال `student_id`\n    \n- إرسال `grades` فارغة\n    \n- إرسال `subject_id` أو `score` غير صحيح\n    \n\n## 6\\. الاستجابة — 404 Not Found\n\nيُرجع إذا كان `student_id` أو `academic_year_id` أو `subject_id` غير موجود في قاعدة البيانات.\n\n## 7\\. ملاحظات\n\n- العملية تتم داخل `transaction.atomic()` لضمان سلامة البيانات.\n    \n- منطق الـ Upsert: إذا كانت الدرجة موجودة مسبقاً للطالب في نفس السنة والمادة، يتم تحديثها؛ وإلا يتم إنشاؤها.\n    \n- إذا لم يُرسَل `academic_year_id`، يتم حساب السنة التالية تلقائياً بناءً على آخر سنة مسجلة للطالب."
+      },
+      "response": []
+    },
+    {
+      "name": "subjects",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"variant_id\": 19\r\n}",
+          "options": {
+            "raw": {
+              "language": "text"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/students/subjects",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "students",
+            "subjects"
+          ]
+        },
+        "description": "## المواد الدراسية — subjects\n\n### الوصف\n\nيُرجع هذا الطلب قائمة بجميع المواد الدراسية المتاحة في النظام، مرتبةً تصاعدياً حسب المعرّف (`id`).\n\n---\n\n### تفاصيل الطلب\n\n| العنصر | القيمة |\n| --- | --- |\n| **الطريقة (Method)** | `GET` |\n| **الرابط (URL)** | `{{base_url}}/students/subjects` |\n| **المصادقة (Auth)** | لا يلزم — لا توجد متطلبات مصادقة |\n| **معاملات الاستعلام** | لا يوجد |\n| **جسم الطلب (Body)** | لا يوجد |\n\n---\n\n### الاستجابة\n\n#### الحالة: `200 OK`\n\nيُعيد الطلب مصفوفة JSON تحتوي على كائنات المواد الدراسية، كل كائن يتضمن الحقلين التاليين:\n\n| الحقل | النوع | الوصف |\n| --- | --- | --- |\n| `id` | `integer` | المعرّف الفريد للمادة |\n| `name` | `string` | اسم المادة الدراسية |\n\n#### مثال على الاستجابة\n\n``` json\n[\n  {\"id\": 1, \"name\": \"اللغة العربية\"},\n  {\"id\": 2, \"name\": \"اللغة الإنجليزية\"},\n  {\"id\": 3, \"name\": \"الرياضيات\"},\n  {\"id\": 4, \"name\": \"العلوم\"},\n  {\"id\": 5, \"name\": \"الدراسات الاجتماعية\"}\n]\n\n ```\n\n---\n\n### ملاحظات\n\n- البيانات مرتبة تصاعدياً حسب حقل `id`.\n    \n- لا يتطلب الطلب أي معاملات إضافية أو رأس تفويض (Authorization Header)."
+      },
+      "response": []
+    },
+    {
+      "name": "predict",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/students/students/1/predict/2027",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "students",
+            "students",
+            "1",
+            "predict",
+            "2027"
+          ]
+        },
+        "description": "## Predict Student Performance\n\nPredicts a student's future academic performance for a given target year using **Linear Regression** trained on their historical grades per subject.\n\n### Method\n`GET /students/{student_id}/predict/{target_year}`\n\n### Path Parameters\n\n| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n| `student_id` | integer | Yes | The unique ID of the student |\n| `target_year` | integer | Yes | The start year to predict (e.g. `2027` for the `2027-2028` academic year) |\n\n### Authentication\nNo authentication required.\n\n### Query Parameters\nNone.\n\n### Response\n\n#### Prediction Result Object\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `student_id` | integer | Unique identifier of the student |\n| `student_name` | string | Full name of the student |\n| `latest_recorded_year` | integer | The start year of the most recent recorded academic year |\n| `target_year` | integer | The requested prediction year |\n| `predicted_gpa` | float | Predicted average GPA across all subjects for the target year |\n| `predictions` | array | Per-subject predicted scores |\n\n#### Subject Prediction Object\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `subject_id` | integer | Unique identifier of the subject |\n| `subject_name` | string | Name of the subject |\n| `predicted_score` | float | Predicted score for that subject, clamped between `0` and `100` |\n| `rating` | string | Performance rating based on predicted score. Possible values: `Excellent`, `Very Good`, `Good`, `Pass`, `Fail` |\n\n### Error Responses\n\n| Status | Condition | Message |\n|--------|-----------|---------|\n| `400 Bad Request` | Student has no recorded grades | `\"لا توجد درجات مسجلة لهذا الطالب للتوقع بناءً عليها.\"` |\n| `400 Bad Request` | `target_year` is not greater than the latest recorded year | `\"سنة التوقع يجب أن تكون أكبر من آخر سنة مسجلة للطالب ({latest_start_year}).\"` |\n| `400 Bad Request` | Insufficient data to train the model (less than 2 years per subject) | `\"البيانات غير كافية لتدريب النموذج (يلزم وجود سنتين على الأقل لكل مادة).\"` |\n| `404 Not Found` | Student does not exist | Standard 404 response |\n\n### Notes\n- A separate **Linear Regression** model is trained per subject using the student's historical scores as training data.\n- `target_year` must be strictly greater than `latest_recorded_year`.\n- At least **2 recorded years** per subject are required to train the model.\n- `predicted_score` is clamped to the range `[0, 100]`.\n- `predicted_gpa` is the arithmetic mean of all per-subject predicted scores, rounded to 2 decimal places.\n\n### Example Response\n\n```json\n{\n  \"student_id\": 1,\n  \"student_name\": \"أحمد محمود\",\n  \"latest_recorded_year\": 2026,\n  \"target_year\": 2027,\n  \"predicted_gpa\": 80.75,\n  \"predictions\": [\n    { \"subject_id\": 1, \"subject_name\": \"اللغة العربية\", \"predicted_score\": 90.29, \"rating\": \"Excellent\" },\n    { \"subject_id\": 2, \"subject_name\": \"اللغة الإنجليزية\", \"predicted_score\": 79.71, \"rating\": \"Very Good\" },\n    { \"subject_id\": 3, \"subject_name\": \"الرياضيات\", \"predicted_score\": 80.43, \"rating\": \"Very Good\" },\n    { \"subject_id\": 4, \"subject_name\": \"العلوم\", \"predicted_score\": 72.71, \"rating\": \"Good\" },\n    { \"subject_id\": 5, \"subject_name\": \"الدراسات الاجتماعية\", \"predicted_score\": 80.59, \"rating\": \"Very Good\" }\n  ]\n}\n```"
+      },
+      "response": []
+    }
+  ]
+}
