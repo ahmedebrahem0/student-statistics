@@ -63,6 +63,11 @@
 .rating-badge.mastery-advanced{background:#1c8a5738;color:#9bf3c4;border-color:#2fa96e55}
 .rating-badge.mastery-medium{background:#8a6a1c38;color:#ffe19b;border-color:#c99a2f55}
 .rating-badge.mastery-critical{background:#8a3e343d;color:#ffc5b8;border-color:#c8766660}
+.rating-badge.rating-excellent{background:#1c8a5738;color:#9bf3c4;border-color:#2fa96e55}
+.rating-badge.rating-very-good{background:#1c6f8a38;color:#9bdcf3;border-color:#2f8fa955}
+.rating-badge.rating-good{background:#8a6a1c38;color:#ffe19b;border-color:#c99a2f55}
+.rating-badge.rating-pass{background:#8a5c1c38;color:#ffc98f;border-color:#c9822f55}
+.rating-badge.rating-fail{background:#8a3e343d;color:#ffc5b8;border-color:#c8766660}
 .report-roadmap-panel{background:linear-gradient(120deg,#1c4a8a26,#0a44475c);border:1px solid #4f7fc955;border-radius:14px;padding:16px}
 .report-roadmap-panel .report-block-title{color:#9bc4ff}
 .report-roadmap-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:8px}

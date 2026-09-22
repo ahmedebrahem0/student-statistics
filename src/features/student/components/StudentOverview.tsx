@@ -23,7 +23,7 @@ import Footer from "@/shared/components/layout/Footer";
 import Loader from "@/shared/components/common/Loader";
 import ErrorMessage from "@/shared/components/common/ErrorMessage";
 import EmptyState from "@/shared/components/common/EmptyState";
-import { numberLabel, ratingLabel } from "../utils/student.utils";
+import { numberLabel, ratingClass, ratingLabel } from "../utils/student.utils";
 export default function StudentOverview({ studentId }: { studentId?: number } = {}) {
   const {
     student,
@@ -195,7 +195,7 @@ export default function StudentOverview({ studentId }: { studentId?: number } = 
                                   </td>
                                   <td>
                                     <span
-                                      className={`rating-badge ${Number(subject.score) < 50 ? "low-rating" : ""}`}
+                                      className={`rating-badge ${ratingClass(subject.rating)}`}
                                     >
                                       {ratingLabel(subject.rating)}
                                     </span>
