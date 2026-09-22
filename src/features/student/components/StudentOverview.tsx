@@ -16,8 +16,9 @@ import GradesLineChart from "./charts/GradesLineChart";
 import SubjectsBarChart from "./charts/SubjectsBarChart";
 import GradesRadarChart from "./charts/GradesRadarChart";
 import PredictionPanel from "./PredictionPanel";
+import StudentReportPanel from "./StudentReportPanel";
 import AddYearModal from "./add-year/AddYearModal";
-import Navbar from "@/shared/components/layout/Navbar";
+import Navigation from "@/shared/components/layout/Navigation";
 import Footer from "@/shared/components/layout/Footer";
 import Loader from "@/shared/components/common/Loader";
 import ErrorMessage from "@/shared/components/common/ErrorMessage";
@@ -43,12 +44,7 @@ export default function StudentOverview({ studentId }: { studentId?: number } = 
   };
   return (
     <div className="app-shell">
-      <Navbar
-        add={add}
-        edit={edit}
-        canEdit={Boolean(selected)}
-        canAdd={Boolean(student)}
-      />
+      <Navigation />
       <main className="dashboard" id="overview">
         {!student ? (
           isLoading ? (
@@ -240,6 +236,7 @@ export default function StudentOverview({ studentId }: { studentId?: number } = 
                       </section>
                     </div>
                     <PredictionPanel studentId={student.id} latestYearLabel={years.at(-1)?.year_label} />
+                    <StudentReportPanel studentId={student.id} studentName={student.student_name} />
                   </>
                 )}
               </>

@@ -21,6 +21,88 @@
 @media(min-width:1100px){.app-shell{grid-template-columns:205px minmax(0,1fr)}.dashboard{padding:30px 28px}.sidebar{padding:30px 18px}.stat{padding:15px 20px;gap:17px}.stat-label{font-size:12px}.stat-value strong,.years-value{font-size:31px}.rating-value{font-size:25px}.line-canvas{height:245px}.bar-canvas,.radar-canvas{height:250px}.details-grid{grid-template-columns:minmax(0,1fr) 260px}.sidebar nav button{font-size:12px}.student-info h1{font-size:20px}.student-info p{font-size:12px}.chart-panel .section-heading h2{font-size:14px}}
 @media(max-width:359px){.dashboard{padding-left:10px;padding-right:10px}.stat{padding:10px 7px;gap:4px}.stat-icon{width:16px;height:16px}.stat-value strong{font-size:22px}.change{font-size:8px}.stat-label{font-size:9px}.section-heading h2{font-size:11px}.compact-button{padding:3px 6px}.subjects-table{font-size:10px}.year-dialog{padding:17px}.subject-input{grid-template-columns:minmax(0,1fr) 68px;gap:6px}.subject-name-label{font-size:12px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+
+/* Student AI report */
+.report-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.report-result{margin-top:14px;display:flex;flex-direction:column;gap:4px}
+.report-block{min-width:0}
+.report-block-title{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;margin-bottom:8px}
+.report-block-title svg{color:var(--accent);flex-shrink:0}
+.report-block p{font-size:12px;line-height:1.9;color:#dcefe9;margin-top:6px}
+.report-subheading{font-size:11px;font-weight:700;color:#c1d9d4;margin:10px 0 4px}
+.report-list{margin:4px 0 0;padding-inline-start:18px;display:flex;flex-direction:column;gap:6px}
+.report-list li{font-size:12px;line-height:1.8;color:#dcefe9}
+.report-chart-block{padding:0;margin:0}
+.report-chart-block .report-block-title{padding:0 2px;margin-bottom:2px}
+.report-chart-block .bar-canvas{margin-top:2px}
+.report-chart-block .report-year-grid,.report-chart-block .report-subject-grid{margin-top:12px}
+.report-year-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;direction:ltr}
+.report-year-card{background:#0a44475c;border:1px solid var(--border);border-radius:11px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.report-year-card span{font-size:9px;color:var(--muted)}
+.report-year-card strong{font-size:16px;color:var(--accent)}
+.report-year-card small{font-size:9px;color:var(--muted)}
+.report-subject-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.report-subject-card{background:#0a44475c;border:1px solid var(--border);border-radius:11px;padding:10px 8px;display:flex;flex-direction:column;gap:4px}
+.report-subject-card span{font-size:11px;color:#dcefe9}
+.report-subject-card strong{font-size:17px;color:var(--accent);direction:ltr}
+.report-subject-card small{font-size:9px;color:var(--muted)}
+.report-teacher-list{display:flex;flex-wrap:wrap;gap:8px}
+.report-teacher-chip{display:inline-flex;align-items:center;gap:5px;background:#116f6c40;border:1px solid #3b928c59;color:#ebfffa;font-size:11px;padding:6px 10px;border-radius:20px}
+.report-teacher-chip i{color:var(--accent);font-style:normal}
+.report-diagnostic-list{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.report-diagnostic-card{background:#0a44475c;border:1px solid var(--border);border-radius:12px;padding:12px}
+.report-diagnostic-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.report-diagnostic-head strong{font-size:13px}
+.report-diagnostic-card p{font-size:11.5px;line-height:1.85;color:#dcefe9;margin-top:5px}
+.report-diagnostic-card p b{color:#a8d8cd;font-weight:700}
+.report-teacher-plan-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:8px}
+.report-teacher-plan-card{background:#0a44475c;border:1px solid var(--border);border-radius:12px;padding:12px}
+.report-teacher-plan-card p{font-size:11.5px;line-height:1.85;color:#dcefe9;margin-top:5px}
+.report-teacher-plan-card p b{color:#a8d8cd;font-weight:700}
+@media(min-width:700px){.report-teacher-plan-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.rating-badge.mastery-advanced{background:#1c8a5738;color:#9bf3c4;border-color:#2fa96e55}
+.rating-badge.mastery-medium{background:#8a6a1c38;color:#ffe19b;border-color:#c99a2f55}
+.rating-badge.mastery-critical{background:#8a3e343d;color:#ffc5b8;border-color:#c8766660}
+.report-roadmap-panel{background:linear-gradient(120deg,#1c4a8a26,#0a44475c);border:1px solid #4f7fc955;border-radius:14px;padding:16px}
+.report-roadmap-panel .report-block-title{color:#9bc4ff}
+.report-roadmap-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:8px}
+.report-roadmap-card{position:relative;background:#0a44475c;border:1px solid var(--border);border-radius:12px;padding:16px 12px 12px}
+.report-roadmap-card strong{display:block;font-size:12.5px;line-height:1.6;padding-inline-end:20px}
+.report-roadmap-label{font-size:11px;font-weight:700;color:#9bc4ff;margin:10px 0 4px}
+.report-roadmap-number{position:absolute;top:-9px;inset-inline-end:10px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;box-shadow:0 3px 10px #00131566}
+.report-roadmap-card-0{border-color:#c99a2f55}.report-roadmap-card-0 .report-roadmap-number{background:#c99a2f}
+.report-roadmap-card-1{border-color:#4f7fc955}.report-roadmap-card-1 .report-roadmap-number{background:#4f7fc9}
+.report-roadmap-card-2{border-color:#2fa96e55}.report-roadmap-card-2 .report-roadmap-number{background:#2fa96e}
+@media(min-width:900px){.report-roadmap-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.report-guidance-card{background:linear-gradient(120deg,#8a6a1c26,#0a44475c);border:1px solid #c99a2f55;border-radius:14px;padding:16px}
+.report-guidance-card .report-block-title{color:#ffe19b}
+.report-summary-card{background:linear-gradient(120deg,#1c8a5726,#0a44475c);border:1px solid #2fa96e55;border-radius:14px;padding:16px}
+.report-summary-card .report-block-title{color:#9bf3c4}
+.report-trajectory-card{background:linear-gradient(120deg,#1c4a8a26,#0a44475c);border:1px solid #4f7fc955;border-radius:14px;padding:16px}
+.report-trajectory-card .report-block-title{color:#9bc4ff}
+.report-behavioral-card{background:linear-gradient(120deg,#5c2c8a26,#0a44475c);border:1px solid #9a5fd955;border-radius:14px;padding:16px}
+.report-behavioral-card .report-block-title{color:#d4b3ff}
+.report-risk-card{background:linear-gradient(120deg,#8a3e3426,#0a44475c);border:1px solid #c8766660;border-radius:14px;padding:16px}
+.report-risk-card .report-block-title{color:#ffc5b8}
+.report-verdict-card{background:linear-gradient(120deg,#116f6c40,#0a44475c);border:1px solid #3b928c77;border-radius:14px;padding:16px}
+.report-verdict-card .report-block-title{color:#bdf7e7}
+.report-verdict-card p{font-size:13px;font-weight:500}
+.report-subitem{border-top:1px solid #21606570;padding:10px 0}
+.report-subitem:first-of-type{border-top:0;padding-top:6px}
+.report-subitem strong{display:block;font-size:12.5px;margin-bottom:5px}
+.report-subitem p{font-size:11.5px;line-height:1.85;color:#dcefe9;margin-top:4px}
+@media(min-width:600px){.report-year-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}.report-subject-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}
+
+/* Student overview */
+.students-dashboard{padding-bottom:26px}.student-overview-hero{padding:20px;display:flex;align-items:center;gap:14px;background:linear-gradient(112deg,#074044 0%,#09645f 62%,#0b4a4c 100%);position:relative;overflow:hidden}.student-overview-hero:after{content:"";position:absolute;left:-38px;top:-72px;width:170px;height:170px;border:1px solid #79ead42c;transform:rotate(18deg)}.student-overview-icon{width:58px;height:58px;display:grid;place-items:center;border:1px solid #7fe0d064;background:#0d777066;color:#9af7e5;border-radius:16px;flex:none}.student-overview-hero h1{font-size:20px;line-height:1.5}.student-overview-hero p{font-size:11px;line-height:1.8;color:#c8dfda;max-width:700px}.student-overview-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:13px}.student-overview-summary>div{padding:13px 8px;display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center}.student-overview-summary>div>div{display:flex;align-items:center;gap:8px}.student-overview-summary span{font-size:9px;color:var(--muted)}.student-overview-summary strong{font-size:19px}.student-overview-summary svg{color:var(--accent);width:18px}.student-ranking{margin-top:22px;padding:17px 10px 12px}.students-section-heading{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:11px;padding-inline:7px}.students-section-heading h2{font-size:16px}.students-section-heading>span{font-size:9px;color:var(--muted);border-bottom:1px solid #3b928c;padding-bottom:3px}.student-ranking-chart{width:100%;overflow:hidden}.students-overview-list{margin-top:24px}.student-overview-grid{display:grid;gap:11px}.student-overview-card{padding:15px;min-width:0;position:relative;overflow:hidden;transition:transform .18s,border-color .18s,background .18s}.student-overview-card:hover{transform:translateY(-2px);border-color:#3b928c;background:#0a4144c7}.student-card-head{display:flex;align-items:center;gap:9px}.student-card-head h3{font-size:14px;margin-bottom:4px}.student-card-head p{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:9px}.student-rank{font-size:10px;color:#73dcca;border:1px solid #3b928c66;background:#26737230;padding:5px 6px;border-radius:7px}.student-rating{margin-right:auto;padding:4px 8px;border-radius:7px;background:#16826638;border:1px solid #48bd9260;color:#a8f3d3;font-size:9px;font-weight:700}.student-rating.is-low{background:#8a3e343d;border-color:#c8766660;color:#ffc5b8}.student-card-body{display:grid;grid-template-columns:105px minmax(0,1fr);align-items:center;gap:12px;margin-top:12px;border-block:1px solid #21606575;padding:9px 0}.student-gpa span{display:block;font-size:9px;color:var(--muted);margin-bottom:3px}.student-gpa strong{font-size:21px}.student-gpa small{font-size:8px;color:var(--muted);font-weight:500}.student-mini-trend{height:62px;min-width:0}.student-mini-empty{height:62px;display:grid;place-items:center;color:var(--muted);font-size:9px}.student-card-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:10px}.student-card-foot>span{color:var(--muted);font-size:9px}.student-card-foot b{color:#d9ece6;margin-right:4px}.student-card-foot a{display:inline-flex;align-items:center;gap:5px;color:#aaf6e7;text-decoration:none;font-size:10px;font-weight:700;min-height:32px;padding:5px 9px;border-radius:8px;background:#14635c55;border:1px solid #3b928c55;transition:background .18s}.student-card-foot a:hover{background:#227a7266}.student-overview-state{margin-top:14px}
+@media(min-width:600px){.student-overview-hero{padding:24px}.student-overview-summary{gap:13px}.student-overview-summary>div{padding:17px}.student-overview-summary span{font-size:11px}.student-overview-summary strong{font-size:24px}.student-ranking{padding:20px 18px 14px}.student-overview-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.student-overview-card{padding:17px}.student-card-body{grid-template-columns:115px minmax(0,1fr)}}
+@media(min-width:1000px){.student-overview-hero h1{font-size:24px}.student-overview-hero p{font-size:12px}.student-overview-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.students-overview-list{margin-top:28px}.student-overview-card{padding:18px}.student-card-head h3{font-size:15px}.student-ranking{padding:21px 22px 15px}}
+@media(max-width:430px){.student-overview-hero{align-items:flex-start}.student-overview-icon{width:49px;height:49px}.student-overview-summary strong{font-size:17px}.student-overview-summary>div{padding-inline:5px}.student-card-body{grid-template-columns:96px minmax(0,1fr)}.students-section-heading>span{display:none}}
+
+/* Student overview readability */
+.student-ranking-scroll{max-height:520px;overflow-y:auto;overflow-x:hidden;scrollbar-color:#3b928c #062f32;scrollbar-width:thin}.student-ranking-scroll:focus-visible{outline:2px solid var(--accent);outline-offset:3px}.student-ranking-chart{overflow:visible}.student-overview-summary span{font-size:11px;line-height:1.5}.students-section-heading>span{font-size:11px}.student-card-head p,.student-rating,.student-card-foot>span,.student-gpa span,.student-mini-empty{font-size:11px}.student-rank{font-size:11px}.student-gpa small{font-size:9px}.student-card-foot a{font-size:11px;min-height:34px}
+.student-comparison-wrap{min-width:0}.student-series-key,.student-rating-key{display:flex;direction:rtl;align-items:center;justify-content:center;flex-wrap:wrap;gap:7px 15px;color:#dbeeea;font-size:11px;padding:3px 5px 8px}.student-series-key span,.student-rating-key span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}.student-series-key i{width:18px;height:3px;border-radius:3px}.student-rating-key{border-top:1px solid #21606570;color:var(--muted);padding-top:10px}.student-rating-key i{width:8px;height:8px;border-radius:50%}.student-rating-key>span:first-child{color:#dbeeea;font-weight:700}.student-comparison-scroll{width:100%;overflow-x:hidden;overflow-y:clip;scrollbar-color:#3b928c #062f32;scrollbar-width:thin;padding-bottom:3px}.student-comparison-scroll.is-wide{overflow-x:auto}.student-comparison-scroll:focus-visible{outline:2px solid var(--accent);outline-offset:3px}.student-comparison-chart{width:100%}.student-chart-tooltip{min-width:175px;background:#07383b;border:1px solid #3b928c;border-radius:9px;color:#fff;padding:9px 11px;box-shadow:0 8px 25px #00131588}.student-chart-tooltip>strong{display:block;margin-bottom:6px;font-size:12px}.student-chart-tooltip>div{display:grid;grid-template-columns:7px minmax(60px,1fr) auto;align-items:center;gap:5px 7px;margin-top:5px;font-size:11px}.student-chart-tooltip i{width:7px;height:7px;border-radius:50%}.student-chart-tooltip bdi{font-weight:700;color:#fff}.student-chart-tooltip small{grid-column:2/-1;color:#bfe8df;font-size:9px}
+@media(max-width:700px){.student-comparison-scroll{overflow-x:auto}.student-comparison-chart{min-width:650px!important}.student-series-key,.student-rating-key{justify-content:flex-start}.student-comparison-scroll:after{content:"اسحب لعرض باقي السنوات";position:sticky;right:8px;bottom:2px;display:inline-block;direction:rtl;color:#abc8c5;font-size:9px;background:#07383be8;padding:3px 7px;border-radius:5px}}
 .statistics{direction:ltr}.stat{direction:ltr}.stat>div{direction:rtl;text-align:center;min-width:0}.stat-value{direction:ltr;justify-content:center}.student-info{direction:ltr}.student-info>div:not(.student-info-extra){direction:rtl;text-align:right}.student-cap{left:auto;right:10px}.student-info-extra{margin-right:0;margin-left:auto;direction:rtl}
 
 /* Teacher analytics */

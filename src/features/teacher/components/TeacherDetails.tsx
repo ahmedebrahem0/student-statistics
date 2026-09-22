@@ -8,7 +8,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { useGetTeacherQuery } from "../api/teacherApi";
-import TeacherNavigation from "./TeacherNavigation";
+import Navigation from "@/shared/components/layout/Navigation";
 import TeacherTrendChart from "./TeacherTrendChart";
 import Loader from "@/shared/components/common/Loader";
 import ErrorMessage from "@/shared/components/common/ErrorMessage";
@@ -24,7 +24,7 @@ export default function TeacherDetails({ teacherId }: { teacherId: number }) {
   } = useGetTeacherQuery(teacherId);
   return (
     <div className="app-shell">
-      <TeacherNavigation />
+      <Navigation />
       <main className="dashboard teacher-dashboard">
         {isLoading ? (
           <Loader />
