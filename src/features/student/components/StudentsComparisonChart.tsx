@@ -1,6 +1,7 @@
 'use client';
 
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Frown } from 'lucide-react';
 import type { StudentComparison } from '../types/student.types';
 import { numberLabel, ratingFor, ratingLabel } from '../utils/student.utils';
 
@@ -16,9 +17,23 @@ function yearOrder(label: string) {
   return match ? Number(match[0]) : Number.MAX_SAFE_INTEGER;
 }
 
+const FROWN_SIZE = 13;
+function FrownIcon({ cx, cy }: { cx: number; cy: number }) {
+  const scale = FROWN_SIZE / 24;
+  return <g>
+    <circle cx={cx} cy={cy} r={9} fill={RATING_COLORS.Fail} stroke="#fff" strokeWidth={1.5} />
+    <g transform={`translate(${cx - FROWN_SIZE / 2}, ${cy - FROWN_SIZE / 2}) scale(${scale})`} stroke="#fff" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" fill="none">
+      <path d="M9 16a5 5 0 016 0" />
+      <path d="M9 10V9" />
+      <path d="M15 10V9" />
+    </g>
+  </g>;
+}
+
 function RatingDot({ cx, cy, value, payload, dataKey, lineColor }: DotProps & { dataKey: string; lineColor: string }) {
   if (cx === undefined || cy === undefined || value === undefined) return null;
   const rating = payload?.ratings[dataKey] ?? ratingFor(Number(value));
+  if (rating === 'Fail') return <FrownIcon cx={cx} cy={cy} />;
   return <circle cx={cx} cy={cy} r={4.5} fill={RATING_COLORS[rating] ?? RATING_COLORS[ratingFor(Number(value))]} stroke={lineColor} strokeWidth={2.5} />;
 }
 
@@ -28,10 +43,11 @@ function StudentTooltip({ active, payload, label }: { active?: boolean; payload?
     <strong>{label}</strong>
     {payload.map((entry) => {
       const rating = entry.payload?.ratings[String(entry.dataKey)] ?? ratingFor(Number(entry.value));
+      const isFail = rating === 'Fail';
       return <div key={String(entry.dataKey)}>
         <i style={{ background: entry.color }} />
         <span>{entry.name}</span>
-        <bdi dir="ltr">{numberLabel(Number(entry.value))} / 100</bdi>
+        <bdi dir="ltr" className={isFail ? 'chart-tooltip-fail-value' : ''}>{numberLabel(Number(entry.value))} / 100</bdi>
         <small>{ratingLabel(rating)}</small>
       </div>;
     })}
@@ -78,6 +94,6 @@ export default function StudentsComparisonChart({ students }: { students: Studen
       </ResponsiveContainer>
     </div>
     </div>
-    <div className="student-rating-key" aria-label="دليل ألوان التقييم"><span>لون النقطة:</span>{Object.entries(RATING_COLORS).map(([rating, color]) => <span key={rating}><i style={{ background: color }} />{ratingLabel(rating)}</span>)}</div>
+    <div className="student-rating-key" aria-label="دليل ألوان التقييم"><span>لون النقطة:</span>{Object.entries(RATING_COLORS).map(([rating, color]) => <span key={rating}>{rating === 'Fail' ? <Frown size={12} color={color} strokeWidth={2.2} /> : <i style={{ background: color }} />}{ratingLabel(rating)}</span>)}</div>
   </div>;
 }
