@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { AlertCircle, AlertTriangle, BookOpen, ClipboardList, FileText, HeartHandshake, Map, Sparkles, TrendingUp, Users, Brain, LineChart } from 'lucide-react';
 import { useLazyGetStudentReportQuery } from '../api/studentApi';
-import { numberLabel } from '../utils/student.utils';
+import { numberLabel, replaceStudentNameInReport } from '../utils/student.utils';
 import ReportYearlyChart from './charts/ReportYearlyChart';
 import ReportSubjectChart from './charts/ReportSubjectChart';
 
@@ -22,9 +22,9 @@ export default function StudentReportPanel({ studentId, studentName }: { student
   const generate = () => {
     trigger(studentId).then(() => resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
   };
-  const report = data?.comprehensive_ai_report;
+  const report = data && replaceStudentNameInReport(data.comprehensive_ai_report, data.analytics_data.student_name, studentName);
   const analytics = data && { ...data.analytics_data, student_name: studentName };
-  const reportData = data && { analytics_data: analytics!, comprehensive_ai_report: data.comprehensive_ai_report };
+  const reportData = data && { analytics_data: analytics!, comprehensive_ai_report: report! };
 
   return <section className="chart-panel panel report-panel" aria-label="تقرير الطالب الذكي">
     <div className="section-heading">
