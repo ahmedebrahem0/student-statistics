@@ -24,6 +24,7 @@ import Loader from "@/shared/components/common/Loader";
 import ErrorMessage from "@/shared/components/common/ErrorMessage";
 import EmptyState from "@/shared/components/common/EmptyState";
 import { numberLabel, ratingClass, ratingLabel } from "../utils/student.utils";
+import StudentExam from "./exam/StudentExam";
 export default function StudentOverview({ studentId }: { studentId?: number } = {}) {
   const {
     student,
@@ -59,7 +60,11 @@ export default function StudentOverview({ studentId }: { studentId?: number } = 
           )
         ) : (
           <>
-            <StudentInfo student={student} count={years.length} />
+            <StudentInfo
+              student={student}
+              count={years.length}
+              exam={<StudentExam studentId={student.id} studentName={student.student_name} />}
+            />
             <StatisticsSummary years={years} />
             {years.length > 0 && (
               <section className="chart-panel panel" id="progress">
