@@ -25,7 +25,7 @@ function parseStudentPerformance(response: unknown): Student {
 export const studentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getStudentsComparison: builder.query<StudentComparison[], void>({
-      query: () => 'students/compare',
+      query: () => 'students/students/compare',
       transformResponse: (response: unknown) => studentComparisonSchema.parse(response),
       providesTags: ['Student']
     }),
@@ -35,26 +35,26 @@ export const studentApi = baseApi.injectEndpoints({
       providesTags: ['Student']
     }),
     getStudentById: builder.query<Student, number>({
-      query: (studentId) => `student/${studentId}/performance`,
+      query: (studentId) => `students/students/${studentId}/performance`,
       transformResponse: (response: unknown) => parseStudentPerformance(response),
       providesTags: (_result, _error, studentId) => [{ type: 'Student', id: studentId }]
     }),
     getSubjects: builder.query<SubjectOption[], void>
       ({
-        query: () => 'student/subjects',
+        query: () => 'students/subjects',
         transformResponse: (response: unknown) => subjectOptionsSchema.parse(response)
       }),
     manageGrades: builder.mutation<ManageGradesResponse, ManageGradesRequest>
       ({
         query: (body) => ({
-          url: 'student/grades/manage',
+          url: 'students/grades/manage',
           method: 'POST', body
         }), transformResponse: (response: unknown): ManageGradesResponse => {
           const parsed = manageGradesResponseSchema.parse(response);
           return { message: parsed.message, data: parseStudentPerformance(parsed.data) };
         }, invalidatesTags: ['Student']
       }),
-    getPrediction: builder.query<PerformancePrediction, { studentId: number; year: number }>({ query: ({ studentId, year }) => `student/predict/${studentId}/${year}`, transformResponse: (response: unknown) => predictionResponseSchema.parse(response) }),
+    getPrediction: builder.query<PerformancePrediction, { studentId: number; year: number }>({ query: ({ studentId, year }) => `students/students/${studentId}/predict/${year}`, transformResponse: (response: unknown) => predictionResponseSchema.parse(response) }),
     getStudentReport: builder.query<StudentReport, number>({ query: (studentId) => ({ url: `students/reports/students/${studentId}`, timeout: 90000 }), transformResponse: (response: unknown) => studentReportSchema.parse(response) })
   })
 });
