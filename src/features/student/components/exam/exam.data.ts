@@ -7,7 +7,9 @@ export type ExamQuestion = {
 
 export const SOCIAL_STUDIES_EXAM_VERSION = "social-studies-v1";
 export const QUESTION_SCORE = 10;
-export const TOTAL_SCORE = 80;
+export const MCQ_TOTAL_SCORE = 80;
+export const ESSAY_SCORE = 20;
+export const TOTAL_SCORE = 100;
 
 export const socialStudiesQuestions: ExamQuestion[] = [
   { id: 1, question: "ما عاصمة جمهورية مصر العربية؟", choices: ["القاهرة", "الإسكندرية", "الأقصر", "أسوان"], correctAnswer: 0 },
@@ -21,10 +23,20 @@ export const socialStudiesQuestions: ExamQuestion[] = [
 ];
 
 export function getScoreMessage(score: number) {
-  if (score === 80) return "إجابة رائعة يا بطل! أتقنت كل الأسئلة، واصل هذا التفوق.";
-  if (score >= 70) return "ممتاز جدًا! خطوة صغيرة تفصلك عن الدرجة الكاملة.";
-  if (score >= 60) return "أداء قوي ومبشّر. راجع إجاباتك لتصل إلى القمة.";
-  if (score >= 50) return "نتيجة جيدة، ومع مراجعة بسيطة ستتقدم أكثر.";
-  if (score >= 40) return "بداية طيبة. راجع المعلومات التي فاتتك ثم جرّب أسئلة جديدة.";
+  if (score === 100) return "إجابة رائعة يا بطل! أتقنت كل الأسئلة، واصل هذا التفوق.";
+  if (score >= 85) return "ممتاز جدًا! خطوة صغيرة تفصلك عن الدرجة الكاملة.";
+  if (score >= 70) return "أداء قوي ومبشّر. راجع إجاباتك لتصل إلى القمة.";
+  if (score >= 60) return "نتيجة جيدة، ومع مراجعة بسيطة ستتقدم أكثر.";
+  if (score >= 50) return "بداية طيبة. راجع المعلومات التي فاتتك ثم جرّب أسئلة جديدة.";
   return "لا بأس، كل محاولة فرصة للتعلم. راجع الأساسيات وسترى فرقًا كبيرًا.";
+}
+
+export function calculateMcqScore(answers: Record<number, number>) {
+  return socialStudiesQuestions.reduce((total, question) => total + (answers[question.id] === question.correctAnswer ? QUESTION_SCORE : 0), 0);
+}
+
+export function getMissingQuestionNumbers(answers: Record<number, number>, essayAnswer: string) {
+  const missing = socialStudiesQuestions.flatMap((question, index) => answers[question.id] === undefined ? [index + 1] : []);
+  if (!essayAnswer.trim()) missing.push(9);
+  return missing;
 }
