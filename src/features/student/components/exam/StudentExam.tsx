@@ -1,115 +1,30 @@
 "use client";
+import { useEffect,useMemo,useRef,useState } from "react";
+import { AlertTriangle,BookOpenCheck,Check,ChevronDown,ChevronLeft,ChevronRight,CircleCheck,ClipboardList,Eye,LoaderCircle,RotateCcw,X } from "lucide-react";
+import { useGetEssayQuestionQuery,useGradeEssayMutation } from "../../api/examApi";
+import type { EssayGrade,EssayQuestion } from "../../types/exam.types";
+import { MCQ_TOTAL_SCORE,SOCIAL_STUDIES_EXAM_VERSION,TOTAL_SCORE,calculateMcqScore,getMissingQuestionNumbers,getScoreMessage,socialStudiesQuestions } from "./exam.data";
+type Stage="exam"|"result"|"review"; type Answers=Record<number,number>; const COUNT=9;
+function errorMessage(error:unknown){if(error&&typeof error==="object"&&"data" in error){const data=(error as {data?:unknown}).data;if(data&&typeof data==="object"&&"error" in data&&typeof data.error==="string")return data.error}return "حدث خطأ غير متوقع. حاول مرة أخرى."}
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { BookOpenCheck, Check, ChevronDown, ChevronLeft, ChevronRight, CircleCheck, ClipboardList, Eye, RotateCcw, X } from "lucide-react";
-import { QUESTION_SCORE, SOCIAL_STUDIES_EXAM_VERSION, TOTAL_SCORE, getScoreMessage, socialStudiesQuestions } from "./exam.data";
-
-type Stage = "exam" | "result" | "review";
-type Answers = Record<number, number>;
-
-export default function StudentExam({ studentId, studentName }: { studentId: number; studentName: string }) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const [checked, setChecked] = useState(false);
-  const [completed, setCompleted] = useState(false);
-  const [stage, setStage] = useState<Stage>("exam");
-  const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState<Answers>({});
-  const [score, setScore] = useState<number | null>(null);
-  const [guidance, setGuidance] = useState(false);
-  const [launcherExpanded, setLauncherExpanded] = useState(false);
-  const storageKey = `big-education:exam:${SOCIAL_STUDIES_EXAM_VERSION}:completed:${studentId}`;
-
-  useEffect(() => {
-    const readStatus = window.setTimeout(() => {
-      try { setCompleted(sessionStorage.getItem(storageKey) === "true"); } catch { setCompleted(false); }
-      setChecked(true);
-    }, 0);
-    return () => window.clearTimeout(readStatus);
-  }, [storageKey]);
-
-  const answeredCount = Object.keys(answers).length;
-  const result = useMemo(() => socialStudiesQuestions.reduce((total, question) => total + (answers[question.id] === question.correctAnswer ? QUESTION_SCORE : 0), 0), [answers]);
-
-  const open = () => {
-    setStage("exam"); setCurrent(0); setAnswers({}); setScore(null); setGuidance(false);
-    dialogRef.current?.showModal();
-  };
-  const close = () => {
-    dialogRef.current?.close();
-    setAnswers({}); setScore(null); setCurrent(0); setStage("exam"); setGuidance(false);
-  };
-  const submit = () => {
-    if (answeredCount !== socialStudiesQuestions.length) { setGuidance(true); return; }
-    if (!window.confirm("هل أنت متأكد من تسليم الامتحان؟ يمكنك مراجعة إجاباتك قبل التسليم.")) return;
-    setScore(result); setStage("result");
-    try { sessionStorage.setItem(storageKey, "true"); } catch { /* The result still works when storage is unavailable. */ }
-    setCompleted(true);
-  };
-
-  if (!checked || (completed && score === null)) return null;
-  const question = socialStudiesQuestions[current];
-
-  return <>
-    <button
-      className={`exam-launcher ${launcherExpanded ? "is-expanded" : ""}`}
-      onClick={(event) => {
-        const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
-        if (isCoarsePointer && !launcherExpanded) { event.preventDefault(); setLauncherExpanded(true); return; }
-        open();
-      }}
-      onBlur={() => setLauncherExpanded(false)}
-      aria-label={`امتحان متاح: الدراسات الاجتماعية للطالب ${studentName}`}
-    >
-      <span className="exam-launcher-icon" aria-hidden="true"><ClipboardList size={19} /><i /></span>
-      <span className="exam-launcher-details" aria-hidden="true"><span><strong>امتحان متاح</strong><small>الدراسات الاجتماعية</small></span></span>
-      <ChevronDown size={13} className="exam-launcher-arrow" aria-hidden="true" />
-    </button>
-
-    <dialog ref={dialogRef} className="exam-dialog" aria-labelledby="exam-title" onCancel={(event) => { event.preventDefault(); close(); }}>
-      <div className="exam-shell">
-        <header className="exam-header">
-          <span className="exam-header-mark"><BookOpenCheck size={24} /></span>
-          <div><span>اختبار قصير • ٨ أسئلة</span><h2 id="exam-title">الدراسات الاجتماعية</h2><p>{studentName}</p></div>
-          <button className="exam-close" onClick={close} aria-label="إغلاق الامتحان"><X size={21} /></button>
-        </header>
-
-        {stage === "exam" ? <div className="exam-workspace">
-          <nav className="exam-question-rail" aria-label="التنقل بين أسئلة الامتحان">
-            {socialStudiesQuestions.map((item, index) => <button key={item.id} className={`${index === current ? "is-current" : ""} ${answers[item.id] !== undefined ? "is-answered" : ""}`} onClick={() => setCurrent(index)} aria-label={`السؤال ${index + 1}${answers[item.id] !== undefined ? "، تمت الإجابة" : ""}`} aria-current={index === current ? "step" : undefined}>{answers[item.id] !== undefined ? <Check size={14} /> : index + 1}</button>)}
-          </nav>
-          <main className="exam-question-card">
-            <div className="exam-progress-line"><span>السؤال {current + 1} من {socialStudiesQuestions.length}</span><span>{answeredCount} / {socialStudiesQuestions.length} تمت الإجابة</span></div>
-            <div className="exam-progress"><i style={{ width: `${(answeredCount / socialStudiesQuestions.length) * 100}%` }} /></div>
-            <fieldset>
-              <legend><span>{String(current + 1).padStart(2, "0")}</span>{question.question}</legend>
-              <div className="exam-options">{question.choices.map((choice, index) => <label key={choice} className={answers[question.id] === index ? "is-selected" : ""}><input type="radio" name={`question-${question.id}`} value={index} checked={answers[question.id] === index} onChange={() => { setAnswers(previous => ({ ...previous, [question.id]: index })); setGuidance(false); }} /><span className="exam-radio" /><span>{choice}</span></label>)}</div>
-            </fieldset>
-            {guidance && <p className="exam-guidance" role="alert">أجب عن كل الأسئلة قبل التسليم. بقي {socialStudiesQuestions.length - answeredCount}.</p>}
-            <footer className="exam-actions">
-              <button className="secondary-button" disabled={current === 0} onClick={() => setCurrent(value => value - 1)}><ChevronRight size={17} />السابق</button>
-              {current < socialStudiesQuestions.length - 1 ? <button className="primary-button" onClick={() => setCurrent(value => value + 1)}>التالي<ChevronLeft size={17} /></button> : <button className="exam-submit" onClick={submit} aria-disabled={answeredCount !== socialStudiesQuestions.length}><CircleCheck size={18} />تسليم الامتحان</button>}
-            </footer>
-          </main>
-        </div> : <ResultView stage={stage} score={score ?? result} studentName={studentName} answers={answers} onReview={() => setStage("review")} onResult={() => setStage("result")} onClose={close} />}
-      </div>
-    </dialog>
-  </>;
+export default function StudentExam({studentId,studentName}:{studentId:number;studentName:string}){
+ const dialogRef=useRef<HTMLDialogElement>(null); const [checked,setChecked]=useState(false); const [completed,setCompleted]=useState(false); const [stage,setStage]=useState<Stage>("exam"); const [current,setCurrent]=useState(0); const [answers,setAnswers]=useState<Answers>({}); const [essayAnswer,setEssayAnswer]=useState(""); const [grade,setGrade]=useState<EssayGrade|null>(null); const [guidance,setGuidance]=useState(false); const [submitError,setSubmitError]=useState(""); const [expanded,setExpanded]=useState(false);
+ const storageKey=`big-education:exam:${SOCIAL_STUDIES_EXAM_VERSION}:completed:${studentId}`; const {data:essayQuestion,isLoading,isError,refetch}=useGetEssayQuestionQuery(); const [gradeEssay,{isLoading:isSubmitting}]=useGradeEssayMutation();
+ useEffect(()=>{const timer=window.setTimeout(()=>{try{setCompleted(sessionStorage.getItem(storageKey)==="true")}catch{setCompleted(false)}setChecked(true)},0);return()=>window.clearTimeout(timer)},[storageKey]);
+ const mcqScore=useMemo(()=>calculateMcqScore(answers),[answers]); const missing=useMemo(()=>getMissingQuestionNumbers(answers,essayAnswer),[answers,essayAnswer]); const answered=COUNT-missing.length;
+ const reset=()=>{setStage("exam");setCurrent(0);setAnswers({});setEssayAnswer("");setGrade(null);setGuidance(false);setSubmitError("")}; const open=()=>{reset();dialogRef.current?.showModal()}; const close=()=>{dialogRef.current?.close();reset()};
+ const submit=async()=>{if(missing.length){setGuidance(true);return}if(!essayQuestion){setSubmitError("انتظر حتى يتم تحميل السؤال المقالي ثم حاول مرة أخرى.");return}if(!window.confirm("هل أنت متأكد من تسليم الامتحان؟ يمكنك مراجعة إجاباتك قبل التسليم."))return;setSubmitError("");try{const result=await gradeEssay({questionId:essayQuestion.id,studentAnswer:essayAnswer.trim()}).unwrap();setGrade(result);setStage("result");try{sessionStorage.setItem(storageKey,"true")}catch{}setCompleted(true)}catch(error){setSubmitError(errorMessage(error))}};
+ if(!checked||(completed&&grade===null))return null; const isEssay=current===8; const question=socialStudiesQuestions[current];
+ return <><button className={`exam-launcher ${expanded?"is-expanded":""}`} onClick={event=>{if(window.matchMedia("(pointer: coarse)").matches&&!expanded){event.preventDefault();setExpanded(true);return}open()}} onBlur={()=>setExpanded(false)} aria-label={`امتحان متاح: الدراسات الاجتماعية للطالب ${studentName}`}><span className="exam-launcher-icon" aria-hidden="true"><ClipboardList size={19}/><i/></span><span className="exam-launcher-details" aria-hidden="true"><span><strong>امتحان متاح</strong><small>الدراسات الاجتماعية</small></span></span><ChevronDown size={13} className="exam-launcher-arrow" aria-hidden="true"/></button>
+ <dialog ref={dialogRef} className="exam-dialog" aria-labelledby="exam-title" onCancel={event=>{event.preventDefault();if(!isSubmitting)close()}}><div className="exam-shell"><header className="exam-header"><span className="exam-header-mark"><BookOpenCheck size={24}/></span><div><span>اختبار قصير • ٩ أسئلة • ١٠٠ درجة</span><h2 id="exam-title">الدراسات الاجتماعية</h2><p>{studentName}</p></div><button className="exam-close" onClick={close} disabled={isSubmitting} aria-label="إغلاق الامتحان"><X size={21}/></button></header>
+ {stage==="exam"?<div className="exam-workspace"><nav className="exam-question-rail" aria-label="التنقل بين أسئلة الامتحان">{Array.from({length:COUNT},(_,index)=>{const done=index<8?answers[socialStudiesQuestions[index].id]!==undefined:!!essayAnswer.trim();return <button key={index} className={`${index===current?"is-current":""} ${done?"is-answered":""} ${index===8?"is-essay":""}`} onClick={()=>setCurrent(index)} aria-label={`السؤال ${index+1}${done?"، تمت الإجابة":""}`} aria-current={index===current?"step":undefined}>{done?<Check size={14}/>:index+1}</button>})}</nav>
+ <main className="exam-question-card"><div className="exam-progress-line"><span>السؤال {current+1} من {COUNT}</span><span>{answered} / {COUNT} تمت الإجابة</span></div><div className="exam-progress"><i style={{width:`${answered/COUNT*100}%`}}/></div>
+ {isEssay?<EssayView question={essayQuestion} answer={essayAnswer} loading={isLoading} failed={isError} onAnswer={value=>{setEssayAnswer(value);setGuidance(false);setSubmitError("")}} onRetry={refetch}/>:<fieldset><legend><span>{String(current+1).padStart(2,"0")}</span>{question.question}</legend><div className="exam-options">{question.choices.map((choice,index)=><label key={choice} className={answers[question.id]===index?"is-selected":""}><input type="radio" name={`question-${question.id}`} checked={answers[question.id]===index} onChange={()=>{setAnswers(previous=>({...previous,[question.id]:index}));setGuidance(false);setSubmitError("")}}/><span className="exam-radio"/><span>{choice}</span></label>)}</div></fieldset>}
+ {guidance&&<div className="exam-guidance" role="alert"><strong>أكمل الأسئلة التالية قبل التسليم:</strong><span>{missing.map(number=><button key={number} onClick={()=>setCurrent(number-1)}>السؤال {number}</button>)}</span></div>}{submitError&&<div className="exam-submit-error" role="alert"><AlertTriangle size={17}/><p>{submitError}</p><button onClick={submit} disabled={isSubmitting}>{isSubmitting?"جارٍ المحاولة…":"إعادة محاولة التسليم"}</button></div>}
+ <footer className="exam-actions"><button className="secondary-button" disabled={current===0||isSubmitting} onClick={()=>setCurrent(value=>value-1)}><ChevronRight size={17}/>السابق</button>{current<8?<button className="primary-button" disabled={isSubmitting} onClick={()=>setCurrent(value=>value+1)}>التالي<ChevronLeft size={17}/></button>:<button className="exam-submit" onClick={submit} disabled={isSubmitting||isLoading||isError}>{isSubmitting?<LoaderCircle className="exam-spinner" size={18}/>:<CircleCheck size={18}/>} {isSubmitting?"جارٍ تصحيح الإجابة…":"تسليم الامتحان"}</button>}</footer></main></div>:grade&&essayQuestion?<ResultView stage={stage} mcqScore={mcqScore} grade={grade} question={essayQuestion} essayAnswer={essayAnswer} studentName={studentName} answers={answers} onReview={()=>setStage("review")} onResult={()=>setStage("result")} onClose={close}/>:null}</div></dialog></>;
 }
 
-function ResultView({ stage, score, studentName, answers, onReview, onResult, onClose }: { stage: Stage; score: number; studentName: string; answers: Answers; onReview: () => void; onResult: () => void; onClose: () => void }) {
-  const gaugeDegrees = (score / TOTAL_SCORE) * 180;
-  return <div className={`exam-result-layout ${stage === "review" ? "is-review" : ""}`}>
-    <aside className="exam-score-card">
-      <span className="exam-complete"><CircleCheck size={16} />تم تسليم الامتحان</span>
-      <h3>أحسنت يا {studentName}</h3>
-      <p>هذه نتيجتك في الدراسات الاجتماعية</p>
-      <div className="exam-gauge" style={{ "--score-angle": `${gaugeDegrees}deg` } as React.CSSProperties} aria-label={`النتيجة ${score} من ${TOTAL_SCORE}`}><div><strong>{score}<small> / {TOTAL_SCORE}</small></strong><span>درجتك</span></div></div>
-      <div className="exam-message">{getScoreMessage(score)}</div>
-      <div className="exam-result-actions">{stage === "review" ? <button className="secondary-button" onClick={onResult}><RotateCcw size={17} />العودة للنتيجة</button> : <button className="primary-button" onClick={onReview}><Eye size={17} />إظهار الإجابات</button>}<button className="text-button" onClick={onClose}>إغلاق</button></div>
-    </aside>
-    {stage === "review" && <main className="exam-review">
-      <div className="exam-review-heading"><div><span>مراجعة الإجابات</span><h3>تعلّم من كل اختيار</h3></div><div className="exam-review-key"><span><i className="correct" />الإجابة الصحيحة</span><span><i className="wrong" />اختيارك غير الصحيح</span></div></div>
-      {socialStudiesQuestions.map((question, questionIndex) => <section key={question.id} className="exam-review-question"><h4><span>{questionIndex + 1}</span>{question.question}</h4><div>{question.choices.map((choice, choiceIndex) => { const correct = choiceIndex === question.correctAnswer; const selectedWrong = answers[question.id] === choiceIndex && !correct; return <p key={choice} className={correct ? "is-correct" : selectedWrong ? "is-wrong" : ""}>{correct ? <Check size={15} /> : <span />}{choice}{selectedWrong && <small>اختيارك</small>}</p>; })}</div></section>)}
-    </main>}
-  </div>;
-}
+function EssayView({question,answer,loading,failed,onAnswer,onRetry}:{question?:EssayQuestion;answer:string;loading:boolean;failed:boolean;onAnswer:(v:string)=>void;onRetry:()=>void}){if(loading)return <section className="exam-essay-state" role="status"><LoaderCircle className="exam-spinner"/><strong>جارٍ تحميل السؤال الأخير…</strong><span>احتفظ بإجاباتك، لن نفقد أي شيء.</span></section>;if(failed||!question)return <section className="exam-essay-state is-error" role="alert"><AlertTriangle/><strong>تعذر تحميل السؤال المقالي</strong><span>إجاباتك السابقة محفوظة داخل الامتحان.</span><button className="secondary-button" onClick={onRetry}>إعادة المحاولة</button></section>;return <fieldset className="exam-essay-fieldset"><legend><span>09</span><span><small>السؤال المقالي • {question.fullMark} درجة</small>{question.question}</span></legend><p className="exam-essay-hint">اكتب إجابة واضحة ومتكاملة؛ تُقيّم الدرجة حسب جودة إجابتك ومدى قربها من العناصر الأساسية.</p><label htmlFor="essay-answer" className="sr-only">إجابة السؤال التاسع المقالية</label><textarea id="essay-answer" value={answer} onChange={e=>onAnswer(e.target.value)} placeholder="اكتب إجابتك هنا…" maxLength={1200} rows={8}/><div className="exam-character-count"><span>{answer.trim()?"تمت كتابة الإجابة":"الإجابة مطلوبة"}</span><bdi>{answer.length} / 1200</bdi></div></fieldset>}
+
+function ResultView({stage,mcqScore,grade,question,essayAnswer,studentName,answers,onReview,onResult,onClose}:{stage:Stage;mcqScore:number;grade:EssayGrade;question:EssayQuestion;essayAnswer:string;studentName:string;answers:Answers;onReview:()=>void;onResult:()=>void;onClose:()=>void}){const score=mcqScore+grade.score;return <div className={`exam-result-layout ${stage==="review"?"is-review":""}`}><aside className="exam-score-card"><span className="exam-complete"><CircleCheck size={16}/>تم تسليم الامتحان</span><h3>أحسنت يا {studentName}</h3><p>هذه نتيجتك في الدراسات الاجتماعية</p><div className="exam-gauge" style={{"--score-angle":`${score/TOTAL_SCORE*180}deg`} as React.CSSProperties} aria-label={`النتيجة ${score} من ${TOTAL_SCORE}`}><div><strong>{score}<small> / {TOTAL_SCORE}</small></strong><span>درجتك</span></div></div><div className="exam-score-breakdown"><div><span>الاختيار من متعدد</span><strong>{mcqScore}<small> / {MCQ_TOTAL_SCORE}</small></strong></div><div><span>السؤال المقالي</span><strong>{grade.score}<small> / {grade.fullMark}</small></strong></div><div><span>الإجمالي</span><strong>{score}<small> / {TOTAL_SCORE}</small></strong></div></div><div className="exam-message">{getScoreMessage(score)}</div><div className="exam-result-actions">{stage==="review"?<button className="secondary-button" onClick={onResult}><RotateCcw size={17}/>العودة للنتيجة</button>:<button className="primary-button" onClick={onReview}><Eye size={17}/>إظهار الإجابات</button>}<button className="text-button" onClick={onClose}>إغلاق</button></div></aside>
+ {stage==="review"&&<main className="exam-review"><div className="exam-review-heading"><div><span>مراجعة الإجابات</span><h3>تعلّم من كل اختيار</h3></div><div className="exam-review-key"><span><i className="correct"/>الإجابة الصحيحة</span><span><i className="wrong"/>اختيارك غير الصحيح</span></div></div>{socialStudiesQuestions.map((item,qIndex)=><section key={item.id} className="exam-review-question"><h4><span>{qIndex+1}</span>{item.question}</h4><div>{item.choices.map((choice,cIndex)=>{const correct=cIndex===item.correctAnswer,wrong=answers[item.id]===cIndex&&!correct;return <p key={choice} className={correct?"is-correct":wrong?"is-wrong":""}>{correct?<Check size={15}/>:<span/>}{choice}{wrong&&<small>اختيارك</small>}</p>})}</div></section>)}<section className="exam-essay-review"><header><span>السؤال ٩ • مقالي</span><strong>{grade.score} من {grade.fullMark}</strong></header><h4>{question.question}</h4><div><article><h5>إجابتك</h5><p>{essayAnswer}</p></article><article><h5>نموذج الإجابة</h5><p>{grade.modelAnswer}</p></article></div><small>الدرجة المقالية تقديرية وتعكس جودة الإجابة ومدى تغطيتها للعناصر الأساسية.</small></section></main>}</div>}
