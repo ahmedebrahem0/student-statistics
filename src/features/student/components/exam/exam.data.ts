@@ -16,10 +16,10 @@ export const socialStudiesQuestions: ExamQuestion[] = [
   { id: 2, question: "أي نهر يمر عبر مصر؟", choices: ["نهر الأمازون", "نهر النيل", "نهر دجلة", "نهر السين"], correctAnswer: 1 },
   { id: 3, question: "في أي مدينة توجد أهرامات الجيزة؟", choices: ["السويس", "المنصورة", "الجيزة", "الغردقة"], correctAnswer: 2 },
   { id: 4, question: "ما البحر الذي يحد مصر من الشمال؟", choices: ["البحر الأحمر", "البحر المتوسط", "بحر العرب", "البحر الميت"], correctAnswer: 1 },
-  { id: 5, question: "ما اسم شبه الجزيرة الواقعة شرق مصر؟", choices: ["سيناء", "العربية", "الأناضول", "البلقان"], correctAnswer: 0 },
-  { id: 6, question: "ما العملة الرسمية في مصر؟", choices: ["الريال", "الدينار", "الجنيه المصري", "الدرهم"], correctAnswer: 2 },
-  { id: 7, question: "أي مدينة مصرية تُعرف بعروس البحر المتوسط؟", choices: ["بورسعيد", "الإسكندرية", "دمياط", "الإسماعيلية"], correctAnswer: 1 },
-  { id: 8, question: "أي حضارة بنت الأهرامات؟", choices: ["الحضارة المصرية القديمة", "الحضارة الرومانية", "الحضارة الفارسية", "الحضارة اليونانية"], correctAnswer: 0 },
+  { id: 5, question: "تقع شبه جزيرة سيناء شرق مصر.", choices: ["صح", "خطأ"], correctAnswer: 0 },
+  { id: 6, question: "الريال هو العملة الرسمية في مصر.", choices: ["صح", "خطأ"], correctAnswer: 1 },
+  { id: 7, question: "تُعرف الإسكندرية بعروس البحر المتوسط.", choices: ["صح", "خطأ"], correctAnswer: 0 },
+  { id: 8, question: "بنت الحضارة الرومانية أهرامات الجيزة.", choices: ["صح", "خطأ"], correctAnswer: 1 },
 ];
 
 export function getScoreMessage(score: number) {
