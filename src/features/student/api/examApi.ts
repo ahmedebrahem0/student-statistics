@@ -6,7 +6,7 @@ export const examApi = createApi({
   reducerPath: "examApi",
   // This local route forwards requests to the grading API and adapts its response.
   // Grading can make two upstream requests, each with a 12-second timeout.
-  baseQuery: fetchBaseQuery({ baseUrl: "/api/student/exam", timeout: 30_000 }),
+  baseQuery: fetchBaseQuery({ baseUrl: "/api/students/grade-answer/", timeout: 30_000 }),
   endpoints: (builder) => ({
     getEssayQuestion: builder.query<EssayQuestion, void>({
       query: () => ({ url: "", cache: "no-store" }),
