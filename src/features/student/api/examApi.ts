@@ -4,7 +4,9 @@ import type { EssayGrade, EssayQuestion, GradeEssayRequest } from "../types/exam
 
 export const examApi = createApi({
   reducerPath: "examApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "/api/student/exam", timeout: 15_000 }),
+  // This local route forwards requests to the grading API and adapts its response.
+  // Grading can make two upstream requests, each with a 12-second timeout.
+  baseQuery: fetchBaseQuery({ baseUrl: "/api/student/exam", timeout: 30_000 }),
   endpoints: (builder) => ({
     getEssayQuestion: builder.query<EssayQuestion, void>({
       query: () => ({ url: "", cache: "no-store" }),
@@ -18,3 +20,6 @@ export const examApi = createApi({
 });
 
 export const { useGetEssayQuestionQuery, useGradeEssayMutation } = examApi;
+
+// https://big-education-egypt.com/api/student/exam
+// https://api.big-education-egypt.com/api/students/grade-answer/
