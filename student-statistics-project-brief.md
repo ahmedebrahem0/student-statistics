@@ -120,7 +120,7 @@ The application gets the student's performance data from the backend.
 ### API Endpoint
 
 ``` text
-https://grindable-unplumb-jacoby.ngrok-free.dev/api/students/1/performance
+https://api.big-education-egypt.com/api/students/1/performance
 ```
 
 The endpoint currently returns the performance data for student `1`.
@@ -1026,7 +1026,7 @@ Brand Colors:
 #267372
 
 Backend:
-https://grindable-unplumb-jacoby.ngrok-free.dev/api/students/1/performance
+https://api.big-education-egypt.com/api/students/1/performance
 
 Main Features:
 - Student overview

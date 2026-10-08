@@ -5,7 +5,9 @@ import {
   upstreamEssayQuestionsSchema,
 } from "@/features/student/schema/exam.schema";
 
-const UPSTREAM_URL = "https://api.big-education-egypt.com/api/students/grade-answer/";
+import { STUDENT_API_BASE_URL } from "@/shared/constants/api-endpoints";
+
+const UPSTREAM_URL = `${STUDENT_API_BASE_URL}/students/grade-answer/`;
 const TIMEOUT_MS = 12_000;
 const responseHeaders = { "Cache-Control": "no-store" };
 

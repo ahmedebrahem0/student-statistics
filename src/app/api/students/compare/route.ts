@@ -3,7 +3,7 @@ import { STUDENT_API_BASE_URL } from '@/shared/constants/api-endpoints';
 export async function GET() {
   try {
     const response = await fetch(`${STUDENT_API_BASE_URL}/students/students/compare/`, {
-      headers: { Accept: 'application/json', 'ngrok-skip-browser-warning': 'true' },
+      headers: { Accept: 'application/json' },
       cache: 'no-store',
       signal: AbortSignal.timeout(15000)
     });

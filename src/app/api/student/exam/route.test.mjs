@@ -16,12 +16,14 @@ function compile(file, dependencies, globals = {}) {
   vm.runInNewContext(source, { exports, require: (name) => dependencies[name] ?? require(name), ...globals });
   return exports;
 }
+const apiConstants = compile('../../../../shared/constants/api-endpoints.ts', {});
 const schemas = compile('../../../../features/student/schema/exam.schema.ts', {});
 function loadRoute(responses) {
   const calls = [];
   const route = compile('./route.ts', {
     'next/server': { NextResponse: { json: (body, init) => Response.json(body, init) } },
     '@/features/student/schema/exam.schema': schemas,
+    '@/shared/constants/api-endpoints': apiConstants,
   }, {
     AbortSignal,
     fetch: async (url, init) => {
