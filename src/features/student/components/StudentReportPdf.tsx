@@ -4,8 +4,8 @@ import type { StudentReport } from '../types/student.types';
 Font.register({
   family: 'Cairo',
   fonts: [
-    { src: 'https://raw.githubusercontent.com/google/fonts/main/ofl/cairo/Cairo%5Bslnt%2Cwght%5D.ttf', fontWeight: 400 },
-    { src: 'https://raw.githubusercontent.com/google/fonts/main/ofl/cairo/Cairo%5Bslnt%2Cwght%5D.ttf', fontWeight: 700 }
+    { src: '/fonts/Cairo.ttf', fontWeight: 400 },
+    { src: '/fonts/Cairo.ttf', fontWeight: 700 }
   ]
 });
 

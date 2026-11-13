@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { DataModeControl } from '@/shared/components/demo/DataModeControl';
 
 function Wordmark() {
   return <span className="wordmark"><Image src="/image/test.png" alt="BIG EDUCATION" width={1672} height={941} priority /></span>;
@@ -28,6 +29,7 @@ export default function Navigation() {
         <Link className={`nav-link ${teacherActive ? 'nav-active' : ''}`} href="/" onClick={() => setOpen(false)}><BarChart3 size={19} />تحليلات المعلمين</Link>
         <Link className={`nav-link ${studentActive ? 'nav-active' : ''}`} href="/student" onClick={() => setOpen(false)}><ChartNoAxesColumnIncreasing size={19} />إحصائيات الطلاب</Link>
       </nav>
+      <DataModeControl />
       <div className="sidebar-bottom"><Image src="/image/under.png" alt="BIG EDUCATION" width={1671} height={941} priority /></div>
     </aside>
     {open && <button className="nav-backdrop" onClick={() => setOpen(false)} aria-label="إغلاق القائمة" />}

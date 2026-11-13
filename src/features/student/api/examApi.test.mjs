@@ -15,7 +15,10 @@ function compile(file, dependencies = {}) {
   return exports;
 }
 const schemas = compile('../schema/exam.schema.ts');
-const { examApi } = compile('./examApi.ts', { '../schema/exam.schema': schemas });
+const apiConstants = compile('../../../shared/constants/api-endpoints.ts');
+const liveMode = { resolveDataMode: async () => 'live', notifyConnectionLost: () => {} };
+const smart = compile('../../../store/smartBaseQuery.ts', { '@/shared/constants/api-endpoints': apiConstants, '@/demo/mode': liveMode, '@/demo/learned': { rememberEssayGrade: () => {}, rememberSaveMessage: () => {} } });
+const { examApi } = compile('./examApi.ts', { '../schema/exam.schema': schemas, '@/store/smartBaseQuery': smart });
 const endpoint = 'https://api.big-education-egypt.com/api/students/grade-answer/';
 const question = { id: 1, question: 'Question', full_mark: 20, answer: 'Model answer' };
 

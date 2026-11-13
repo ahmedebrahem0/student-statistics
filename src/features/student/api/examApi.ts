@@ -1,4 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { smartBaseQuery } from "@/store/smartBaseQuery";
 import {
   essayQuestionSchema,
   gradeEssayRequestSchema,
@@ -9,10 +10,7 @@ import type { EssayGrade, EssayQuestion, GradeEssayRequest } from "../types/exam
 
 export const examApi = createApi({
   reducerPath: "examApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://api.big-education-egypt.com/api/students/grade-answer/",
-    timeout: 30_000,
-  }),
+  baseQuery: smartBaseQuery({ path: "students/grade-answer/", timeout: 30_000 }),
   endpoints: (builder) => ({
     getEssayQuestion: builder.query<EssayQuestion, void>({
       query: () => ({ url: "", cache: "no-store" }),
@@ -29,7 +27,7 @@ export const examApi = createApi({
       async queryFn(body, _api, _extraOptions, baseQuery) {
         const request = gradeEssayRequestSchema.safeParse(body);
         if (!request.success) {
-          return { error: { status: "CUSTOM_ERROR", error: "??? ????? ????? ?????? ??????? ??? ???????." } };
+          return { error: { status: "CUSTOM_ERROR", error: "يجب كتابة إجابة السؤال المقالي قبل التسليم." } };
         }
         const result = await baseQuery({
           url: "",
@@ -42,7 +40,7 @@ export const examApi = createApi({
         if (result.error) return { error: result.error };
         const grade = upstreamEssayGradeSchema.safeParse(result.data);
         if (!grade.success || grade.data.question_id !== request.data.questionId) {
-          return { error: { status: "CUSTOM_ERROR", error: "???? ????? ??? ????? ?? ???? ???????." } };
+          return { error: { status: "CUSTOM_ERROR", error: "وصلت نتيجة غير صالحة من خدمة التصحيح." } };
         }
         const questionsResult = await baseQuery({ url: "", cache: "no-store" });
         if (questionsResult.error) return { error: questionsResult.error };
@@ -51,7 +49,7 @@ export const examApi = createApi({
           ? questions.data.find((item) => item.id === grade.data.question_id)
           : undefined;
         if (!question) {
-          return { error: { status: "CUSTOM_ERROR", error: "???? ????? ????? ??????? ??????." } };
+          return { error: { status: "CUSTOM_ERROR", error: "تعذر تحميل نموذج الإجابة للسؤال." } };
         }
         return {
           data: {

@@ -52,7 +52,7 @@ export const studentApi = baseApi.injectEndpoints({
         }), transformResponse: (response: unknown): ManageGradesResponse => {
           const parsed = manageGradesResponseSchema.parse(response);
           return { message: parsed.message, data: parseStudentPerformance(parsed.data) };
-        }, invalidatesTags: ['Student']
+        }, invalidatesTags: ['Student', 'Teacher']
       }),
     getPrediction: builder.query<PerformancePrediction, { studentId: number; year: number }>({ query: ({ studentId, year }) => `students/students/${studentId}/predict/${year}`, transformResponse: (response: unknown) => predictionResponseSchema.parse(response) }),
     getStudentReport: builder.query<StudentReport, number>({ query: (studentId) => ({ url: `students/reports/students/${studentId}`, timeout: 90000 }), transformResponse: (response: unknown) => studentReportSchema.parse(response) })

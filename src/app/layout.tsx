@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Cairo } from 'next/font/google';
 import Providers from './providers';
 import PwaSupport from '@/shared/components/pwa/PwaSupport';
+import { ConnectionLostNotice } from '@/shared/components/demo/DataModeControl';
 import './globals.css';
 const cairo = Cairo({ subsets: ['arabic', 'latin'], display: 'swap' });
 export const metadata: Metadata = {
@@ -21,4 +22,4 @@ export const metadata: Metadata = {
   formatDetection: { telephone: false },
 };
 export const viewport: Viewport = { themeColor: '#032629', width: 'device-width', initialScale: 1 };
-export default function RootLayout({ children }: { children: React.ReactNode }) { return <html lang="ar" dir="rtl"><body className={cairo.className}><Providers>{children}</Providers><PwaSupport /></body></html>; }
+export default function RootLayout({ children }: { children: React.ReactNode }) { return <html lang="ar" dir="rtl"><body className={cairo.className}><Providers>{children}</Providers><PwaSupport /><ConnectionLostNotice /></body></html>; }

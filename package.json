@@ -7,7 +7,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "demo:capture": "node scripts/capture-demo-data.mjs",
+    "test": "node --experimental-strip-types --test src/demo/engine.test.mjs src/features/student/api/examApi.test.mjs src/app/api/student/exam/route.test.mjs src/features/student/components/exam/exam.data.test.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
