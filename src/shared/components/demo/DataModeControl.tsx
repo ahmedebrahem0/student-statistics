@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { CloudOff, RotateCcw, Wifi, X } from 'lucide-react';
 import { CONNECTION_LOST_EVENT, getResolvedMode, resolveDataMode, setDataMode, subscribeToMode } from '@/demo/mode';
 
@@ -11,11 +11,13 @@ function useResolvedMode() {
   return mode;
 }
 
-/** Sidebar card: shows whether data is live or the offline demo, with switch + reset controls. */
+/** Small corner button showing live/demo; opens a compact menu with switch + reset. */
 export function DataModeControl() {
   const mode = useResolvedMode();
+  const [open, setOpen] = useState(false);
   const [capturedAt, setCapturedAt] = useState<string | null>(null);
   const [confirmingReset, setConfirmingReset] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (mode !== 'demo') return;
@@ -24,7 +26,18 @@ export function DataModeControl() {
     return () => { active = false; };
   }, [mode]);
 
+  useEffect(() => {
+    if (!open) return;
+    const onPointer = (event: PointerEvent) => { if (!root.current?.contains(event.target as Node)) setOpen(false); };
+    const onKey = (event: KeyboardEvent) => { if (event.key === 'Escape') setOpen(false); };
+    document.addEventListener('pointerdown', onPointer);
+    document.addEventListener('keydown', onKey);
+    return () => { document.removeEventListener('pointerdown', onPointer); document.removeEventListener('keydown', onKey); };
+  }, [open]);
+
   if (!mode) return null;
+  const demo = mode === 'demo';
+  const label = demo ? 'وضع العرض بدون إنترنت' : 'متصل بالخادم';
 
   const reset = async () => {
     if (!confirmingReset) { setConfirmingReset(true); return; }
@@ -33,23 +46,32 @@ export function DataModeControl() {
     window.location.reload();
   };
 
-  if (mode === 'live') {
-    return (
-      <div className="data-mode is-live">
-        <span className="data-mode-status"><Wifi size={14} />متصل بالخادم</span>
-        <button type="button" className="data-mode-action" onClick={() => setDataMode('demo')}><CloudOff size={13} />وضع العرض بدون إنترنت</button>
-      </div>
-    );
-  }
-
   return (
-    <div className="data-mode is-demo">
-      <span className="data-mode-status"><CloudOff size={14} />وضع العرض بدون إنترنت</span>
-      {capturedAt && <small>بيانات بتاريخ {formatDate(capturedAt)}</small>}
-      <button type="button" className={`data-mode-action ${confirmingReset ? 'is-confirming' : ''}`} onClick={() => void reset()} onBlur={() => setConfirmingReset(false)}>
-        <RotateCcw size={13} />{confirmingReset ? 'اضغط مرة أخرى للتأكيد' : 'إعادة ضبط بيانات العرض'}
+    <div className={`data-mode ${demo ? 'is-demo' : 'is-live'}`} ref={root}>
+      {open && (
+        <div className="data-mode-menu" role="dialog" aria-label="مصدر البيانات">
+          <span className="data-mode-status">{demo ? <CloudOff size={14} /> : <Wifi size={14} />}{label}</span>
+          {demo && capturedAt && <small>بيانات بتاريخ {formatDate(capturedAt)}</small>}
+          {demo && (
+            <button type="button" className={`data-mode-action ${confirmingReset ? 'is-confirming' : ''}`} onClick={() => void reset()}>
+              <RotateCcw size={13} />{confirmingReset ? 'اضغط مرة أخرى للتأكيد' : 'إعادة ضبط بيانات العرض'}
+            </button>
+          )}
+          <button type="button" className="data-mode-action" onClick={() => setDataMode(demo ? 'live' : 'demo')}>
+            {demo ? <Wifi size={13} /> : <CloudOff size={13} />}{demo ? 'استخدام البيانات المباشرة' : 'وضع العرض بدون إنترنت'}
+          </button>
+        </div>
+      )}
+      <button
+        type="button"
+        className="data-mode-toggle"
+        onClick={() => { setOpen(value => !value); setConfirmingReset(false); }}
+        aria-label={label}
+        aria-expanded={open}
+        title={label}
+      >
+        {demo ? <CloudOff size={14} /> : <Wifi size={14} />}
       </button>
-      <button type="button" className="data-mode-action" onClick={() => setDataMode('live')}><Wifi size={13} />استخدام البيانات المباشرة</button>
     </div>
   );
 }
