@@ -1,16 +1,16 @@
 // Decides whether requests go to the live API or the offline demo engine.
 //   live → always the real API
 //   demo → always the offline snapshot (use this at events with no/unstable internet)
-//   auto → checked once per session: real API if reachable within 3s, otherwise demo
+//   auto → checked on each full page load: real API if reachable within 3s, otherwise demo
+//          (instant when the device reports it is offline)
 // Priority: ?mode= in the URL (remembered) → saved choice → NEXT_PUBLIC_DATA_MODE → auto.
-// The resolved mode never changes on its own mid-session, so live and demo data never mix.
+// The resolved mode never changes on its own while the page is open, so live and demo data never mix.
 import { STUDENT_API_BASE_URL } from '@/shared/constants/api-endpoints';
 
 export type DataMode = 'live' | 'demo' | 'auto';
 export type ResolvedMode = 'live' | 'demo';
 
 const MODE_KEY = 'big-data-mode';
-const RESOLVED_KEY = 'big-data-mode-resolved';
 const PROBE_TIMEOUT_MS = 3000;
 export const MODE_EVENT = 'big:data-mode';
 export const CONNECTION_LOST_EVENT = 'big:connection-lost';
@@ -29,10 +29,7 @@ export function getPreferredMode(): DataMode {
   if (!isBrowser()) return 'auto';
   const fromUrl = new URLSearchParams(window.location.search).get('mode');
   if (isMode(fromUrl)) {
-    if (read(() => localStorage, MODE_KEY) !== fromUrl) {
-      write(() => localStorage, MODE_KEY, fromUrl);
-      write(() => sessionStorage, RESOLVED_KEY, null);
-    }
+    if (read(() => localStorage, MODE_KEY) !== fromUrl) write(() => localStorage, MODE_KEY, fromUrl);
     return fromUrl;
   }
   const saved = read(() => localStorage, MODE_KEY);
@@ -66,10 +63,8 @@ export function resolveDataMode(): Promise<ResolvedMode> {
   resolving = (async () => {
     const preferred = getPreferredMode();
     if (preferred !== 'auto') return settle(preferred);
-    const cached = read(() => sessionStorage, RESOLVED_KEY);
-    if (cached === 'live' || cached === 'demo') return settle(cached);
+    // Re-checked on every full page load (a reload is a fresh start), kept for in-app navigation.
     const mode: ResolvedMode = (await apiReachable()) ? 'live' : 'demo';
-    write(() => sessionStorage, RESOLVED_KEY, mode);
     return settle(mode);
   })();
   return resolving;
@@ -81,7 +76,6 @@ export const getResolvedMode = () => current;
 /** Switches mode explicitly and reloads so every screen refetches from the new source. */
 export function setDataMode(mode: DataMode) {
   write(() => localStorage, MODE_KEY, mode);
-  write(() => sessionStorage, RESOLVED_KEY, null);
   const url = new URL(window.location.href);
   url.searchParams.delete('mode');
   window.location.replace(url.toString());

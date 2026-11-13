@@ -32,6 +32,8 @@ export default function PwaSupport() {
   useEffect(() => {
     if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js', { scope: '/', updateViaCache: 'none' }).catch(() => {});
+      // Keep the offline copy of the app in sync with the latest deploy.
+      if (navigator.onLine) void navigator.serviceWorker.ready.then(registration => registration.active?.postMessage('refresh-precache')).catch(() => {});
     }
     const onPrompt = (event: Event) => {
       event.preventDefault();
